@@ -26,6 +26,6 @@ private slots:
     void onConnected();
     void onDisconnected();
     void onDataSended(qint64 len);
-    //void onDataRecved(QString msg);
+    void onDataRecved(QString msg);
 
 };

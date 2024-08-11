@@ -1,101 +1,34 @@
 #include "TcpClient.h"
 
-
-
-
-
-
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <errno.h>
-#include <sys/select.h>
-#include <netdb.h>
-
-
-bool ConnectServer(int* sockfd, const char* ip, int port);
-
-int main(int argc, char** argv)
-{
-    int serverfd = -1;
-    if (ConnectServer(&serverfd, "127.0.0.1", atoi(argv[1])) == false)
-    {
-        printf("connect failed..\n");
-        return -1;
-    }
-    printf("connected..\n");
-
-    char buf[1024];
-    int msgCount = 0;
-    const int TESTCOUNT = 5;
-    while (msgCount < TESTCOUNT)
-        //while(true)
-    {
-        memset(buf, 0, sizeof(buf));
-        //printf("enter input:\n");
-        //scanf("%s",buf);
-
-        sprintf(buf, "this is msg %d", msgCount);
-        if (send(serverfd, buf, strlen(buf), 0) == false)
-        {
-            printf("send error..\n");
-            return -1;
-        }
-        printf("send:%s\n", buf);
-
-        memset(buf, 0, sizeof(buf));
-        if (recv(serverfd, buf, sizeof(buf), 0) == false)
-        {
-            printf("recv error..\n");
-            return -1;
-        }
-        printf("recv:%s\n", buf);
-        sleep(1);
-        msgCount++;
-    }
-
-    printf("msgCount=%d\n", msgCount);
-
-    return 0;
-}
-
-bool ConnectServer(int* sockfd, const char* ip, int port)
-{
-    struct sockaddr_in server_addr;
-    memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-
-    server_addr.sin_addr.s_addr = inet_addr(ip);
-    server_addr.sin_port = htons(port);
-
-    *sockfd = socket(PF_INET, SOCK_STREAM, 0);
-    if (*sockfd == -1)
-    {
-        return false;
-    }
-
-    if (connect(*sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1)
-    {
-        close(*sockfd);
-        *sockfd = -1;
-        return false;
-    }
-
-    return true;
-}
-
-*/
-
 void TcpClient::initEvents()
 {
     connect(m_tcpsocket, &QTcpSocket::connected, this, &TcpClient::onConnected);
     connect(m_tcpsocket, &QTcpSocket::disconnected, this, &TcpClient::onDisconnected);
     connect(m_tcpsocket, &QTcpSocket::bytesWritten, this, &TcpClient::onSendData);
-    connect(m_tcpsocket, &QTcpSocket::disconnected, this, &TcpClient::onRecvData);
+    connect(m_tcpsocket, &QTcpSocket::readyRead, this, &TcpClient::onRecvData);
+}
+
+bool TcpClient::Writen(const char* buffer, qint64 size)
+{
+    if (m_tcpsocket == nullptr)    return false;
+
+    int ileft, isend, idx;
+    ileft = size;
+    isend = 0;
+    idx = 0;
+    while (ileft > 0)
+    {
+        if (isend = m_tcpsocket->write(buffer, ileft) <= 0)
+        {
+            QMessageBox::information(nullptr, "error", "NULL");
+            return false;
+        }
+        ileft -= isend;
+        idx += isend;
+    }
+    bool res = m_tcpsocket->flush();
+
+    return res;
 }
 
 TcpClient::TcpClient()
@@ -172,12 +105,24 @@ bool TcpClient::DisconnectFromServer()
     return m_tcpsocket->state() == QAbstractSocket::UnconnectedState;
 }
 
-bool TcpClient::Send(QString msg)
+
+bool TcpClient::Send(QByteArray buffer, int buflen)
 {
-    QByteArray msgtmp = msg.toUtf8();
-    int ilen = m_tcpsocket->write(msgtmp);
-    return ilen == msgtmp.size();
-    m_tcpsocket->flush();
+    int ilen = 0;
+    if (buflen == 0)
+        ilen = strlen(buffer);
+    else
+        ilen = buflen;
+
+    char ilenn[4] = { 0 };
+    qToBigEndian<qint32>(ilen, ilenn); //ilen转网络序
+    buffer.prepend((const char*)ilenn, 4);  //把长度ilenn添加在buffer前面
+
+    //if (Writen(buffer, static_cast<qint64>(ilen)+4) == false)    return false;
+    int isend = m_tcpsocket->write(buffer);
+    if(4+ilen!=isend)    return false;
+
+    return m_tcpsocket->flush();
 }
 
 QString TcpClient::Recv()

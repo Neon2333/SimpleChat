@@ -2,6 +2,7 @@
 #include<QObject>
 #include<QHostAddress>
 #include<QTcpSocket>
+#include <QtEndian>
 #include<QMessageBox> 
 
 class TcpClient	: public QObject
@@ -12,6 +13,7 @@ private:
 	unsigned int m_port;
 	QTcpSocket* m_tcpsocket;
 	void initEvents();
+	bool Writen(const char* buffer, qint64 size);	//解决粘包、分包
 
 public:
 	TcpClient();
@@ -23,7 +25,7 @@ public:
 	bool ConnectToServer(QString ip, unsigned int port);	//连接服务器
 	bool IsConnected();	//连接状态
 	bool DisconnectFromServer();	//从服务器断开
-	bool Send(QString msg);		//给服务器发字符串
+	bool TcpClient::Send(QByteArray buffer, int buflen);	//给服务器发字节，加上长度头
 	QString Recv();		//从服务器接收字符串
 
 private slots:

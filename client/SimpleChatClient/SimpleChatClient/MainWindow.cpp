@@ -25,6 +25,7 @@ void MainWindow::initEvents()
     connect(m_tcpclient, &TcpClient::serverConnected, this, &MainWindow::onConnected);
     connect(m_tcpclient, &TcpClient::serverDisconnected, this, &MainWindow::onDisconnected);
     connect(m_tcpclient, &TcpClient::dataSended, this, &MainWindow::onDataSended);
+    connect(m_tcpclient, &TcpClient::dataRecved, this, &MainWindow::onDataRecved);
 
 }
 
@@ -45,8 +46,8 @@ void MainWindow::on_pushButton_send_clicked()
     
     if (!this->ui.lineEdit_enterMsg->text().isEmpty() && m_tcpclient->IsConnected())
     {
-        QString msgtmp = QString("<bizcode>002</bizcode><forwcode>001</forwcode><message>%1</message>").arg(this->ui.lineEdit_enterMsg->text());
-        bool ret = m_tcpclient->Send(msgtmp);
+        QString msgtmp = QString("<bizcode>2</bizcode><forwcode>1</forwcode><message>%1</message>").arg(this->ui.lineEdit_enterMsg->text());
+        bool ret = m_tcpclient->Send(msgtmp.toUtf8(), 0);
     }
 }
 
@@ -63,6 +64,11 @@ void MainWindow::onDisconnected()
 void MainWindow::onDataSended(qint64 len)
 {
     ui.statusBar->showMessage(QString("send: %1 Bytes").arg(len));
+}
+
+void MainWindow::onDataRecved(QString msg)
+{
+    ui.listWidget_msg->addItem(msg);
 }
 
 
