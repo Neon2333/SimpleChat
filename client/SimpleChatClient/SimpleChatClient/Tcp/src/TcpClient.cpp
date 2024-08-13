@@ -133,6 +133,12 @@ QByteArray TcpClient::Recv()
         return nullptr;
     }
 
+
+    //非阻塞延时
+    QElapsedTimer t;
+    t.start();
+    while (t.elapsed() < 500) QCoreApplication::processEvents();
+
     //TODO:read完数据还会被触发1次？？？
     QByteArray data = m_tcpsocket->readAll();
 

@@ -2,8 +2,11 @@
 #include<QObject>
 #include<QHostAddress>
 #include<QTcpSocket>
-#include <QtEndian>
+#include<QtEndian>
 #include<QMessageBox> 
+#include<QElapsedTimer>
+#include<QCoreApplication>
+
 
 class TcpClient	: public QObject
 {

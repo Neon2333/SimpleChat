@@ -46,14 +46,14 @@ bool sendMsgToAllClientsBut(Client** clients, int sizeclients, int excluded, cha
 		{
 			continue;
 		}
-         if(false==TcpWrite(clients[j]->m_clientfd, s))
+
+        if(false==TcpWrite(clients[j]->m_clientfd, s))
 		{
-			printf("write failed..\n");
 			close(clients[j]->m_clientfd);
+            ret=false;
             continue;
         }
                 
-        ret = ret&&TcpWrite(clients[j]->m_clientfd,s);
     }
     return ret;
 }
