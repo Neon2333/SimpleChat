@@ -1,4 +1,4 @@
-#include "./Tcp/inc/TcpClient.h"
+#include "../inc/TcpClient.h"
 
 void TcpClient::initEvents()
 {
@@ -125,7 +125,7 @@ bool TcpClient::Send(QByteArray buffer, int buflen)
     return m_tcpsocket->flush();
 }
 
-QString TcpClient::Recv()
+QByteArray TcpClient::Recv()
 {
     int isize = 0;
     if ((isize=m_tcpsocket->bytesAvailable()) == 0)
@@ -133,45 +133,35 @@ QString TcpClient::Recv()
         return nullptr;
     }
 
-    QByteArray package = m_tcpsocket->readAll();
+    //TODO:read完数据还会被触发1次？？？
+    QByteArray data = m_tcpsocket->readAll();
 
     int imsgLenn = 0;
-    memcpy(&imsgLenn, package.data(), 4);
+    memcpy(&imsgLenn, data.data(), 4);
     int imsgLen = qFromBigEndian(imsgLenn);
     
     char* buffer = (char*)malloc(imsgLen);
     assert(buffer != nullptr);
     memset(buffer, 0, imsgLen);
-    memcpy(buffer, package.data() + 4, imsgLen);
-    return QString::fromLatin1(buffer);
+    memcpy(buffer, data.data() + 4, imsgLen);
+    QByteArray msg(buffer, imsgLen);
+    free(buffer);
+    return msg;
+
+
 
     //int imsgLenn = 0;    
     //m_tcpsocket->read((char*)&imsgLenn, 4);
     //int imsgLen = qFromBigEndian(imsgLenn); //数据包长度
 
-    //
-    //if ((isize = m_tcpsocket->bytesAvailable()) == imsgLen)
+    //QByteArray datagram;
+    //datagram.resize(imsgLen);
+    //while(m_tcpsocket->bytesAvailable() > 0)
     //{
-    //    QByteArray datagram;
-    //    datagram.resize(imsgLen);
     //    m_tcpsocket->read(datagram.data(), datagram.size());
-    //    isize = m_tcpsocket->bytesAvailable();
-    //    QString msgtmp = datagram.data();
-    //    return msgtmp;
-    //}
-    //else
-    //{
-    //    return nullptr;
     //}
 
-    /*while ((isize = m_tcpsocket->bytesAvailable()) > 0)
-    {
-        QByteArray datagram;
-        datagram.resize(imsgLen);
-        m_tcpsocket->read(datagram.data(), datagram.size());
-        QString msgtmp = datagram.data();
-        return msgtmp;
-    }*/
+    //return datagram;
 }
 
 void TcpClient::onConnected()
@@ -192,7 +182,7 @@ void TcpClient::onSendData(qint64 len)
 
 void TcpClient::onRecvData()
 {
-    QString msgRecv = Recv();
+    QByteArray msgRecv = Recv();
     if (msgRecv == nullptr)
         return;
     emit dataRecved(msgRecv);

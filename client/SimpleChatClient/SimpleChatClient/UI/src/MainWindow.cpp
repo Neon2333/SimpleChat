@@ -1,4 +1,4 @@
-#include "./UI/inc/MainWindow.h"
+#include "../inc/MainWindow.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -66,9 +66,9 @@ void MainWindow::onDataSended(qint64 len)
     ui.statusBar->showMessage(QString("send: %1 Bytes").arg(len));
 }
 
-void MainWindow::onDataRecved(QString msg)
+void MainWindow::onDataRecved(QByteArray msg)
 {
-    ui.listWidget_msg->addItem(msg);
+    ui.listWidget_msg->addItem(QString::fromUtf8(msg));
 }
 
 

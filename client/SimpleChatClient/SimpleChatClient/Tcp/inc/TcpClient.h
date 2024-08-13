@@ -25,8 +25,8 @@ public:
 	bool ConnectToServer(QString ip, unsigned int port);	//连接服务器
 	bool IsConnected();	//连接状态
 	bool DisconnectFromServer();	//从服务器断开
-	bool TcpClient::Send(QByteArray buffer, int buflen);	//给服务器发字节，加上长度头
-	QString Recv();		//从服务器接收字符串
+	bool Send(QByteArray buffer, int buflen);	//给服务器发字节，加上长度头
+	QByteArray Recv();		//从服务器接收字符串，解析长度头
 
 private slots:
 	void onConnected();
@@ -38,7 +38,7 @@ signals:
 	void serverConnected();
 	void serverDisconnected();
 	void dataSended(qint64 len);
-	void dataRecved(QString msg);
+	void dataRecved(QByteArray msg);
 };
 
 
