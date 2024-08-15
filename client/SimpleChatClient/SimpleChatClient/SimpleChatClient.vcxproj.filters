@@ -21,23 +21,17 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{d57c66b5-6f93-41b1-9ad7-9c01d7487e3d}</UniqueIdentifier>
+    <Filter Include="inc">
+      <UniqueIdentifier>{929b139c-e52d-4f7d-938f-f2e9b59b9e1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\inc">
-      <UniqueIdentifier>{e978cb53-26f9-4ee2-bce7-d56bc6a15b46}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{dba0abee-2e06-4264-ac84-5f8a3400098a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\src">
-      <UniqueIdentifier>{7dcc409c-8fe3-43ed-998d-231899774cc8}</UniqueIdentifier>
+    <Filter Include="src\UI">
+      <UniqueIdentifier>{95d1a2db-4a4a-442e-b6ce-954597130cc4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tcp">
-      <UniqueIdentifier>{adab64e4-31a7-4cf8-a153-b33f6337f05b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tcp\inc">
-      <UniqueIdentifier>{25ca4089-ff8a-4919-94bb-bc47cde3253a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tcp\src">
-      <UniqueIdentifier>{35e7334c-b778-43c6-955f-9ea34a93a470}</UniqueIdentifier>
+    <Filter Include="src\Utils">
+      <UniqueIdentifier>{4e709df6-4484-41e2-b2dd-c9ca80e7d280}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -49,22 +43,30 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="UI\inc\MainWindow.h">
-      <Filter>UI\inc</Filter>
-    </QtMoc>
-    <QtMoc Include="Tcp\inc\TcpClient.h">
-      <Filter>Tcp\inc</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="UI\src\MainWindow.cpp">
-      <Filter>UI\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Tcp\src\TcpClient.cpp">
-      <Filter>Tcp\src</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utils\TcpClient.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\MainWindow.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\XmlHelper.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="inc\MainWindow.h">
+      <Filter>inc</Filter>
+    </QtMoc>
+    <QtMoc Include="inc\TcpClient.h">
+      <Filter>inc</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="inc\XmlHelper.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

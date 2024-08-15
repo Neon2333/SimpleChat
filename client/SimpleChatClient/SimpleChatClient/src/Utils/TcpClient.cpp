@@ -1,4 +1,4 @@
-#include "./Tcp/inc/TcpClient.h"
+#include "../../inc/TcpClient.h"
 
 void TcpClient::initEvents()
 {
@@ -125,7 +125,7 @@ bool TcpClient::Send(QByteArray buffer, int buflen)
     return m_tcpsocket->flush();
 }
 
-QString TcpClient::Recv()
+QByteArray TcpClient::Recv()
 {
     int isize = 0;
     if ((isize=m_tcpsocket->bytesAvailable()) == 0)
@@ -143,7 +143,9 @@ QString TcpClient::Recv()
     assert(buffer != nullptr);
     memset(buffer, 0, imsgLen);
     memcpy(buffer, package.data() + 4, imsgLen);
-    return QString::fromLatin1(buffer);
+    QByteArray data(buffer, imsgLen);
+    free(buffer);
+    return data;
 
     //int imsgLenn = 0;    
     //m_tcpsocket->read((char*)&imsgLenn, 4);
@@ -192,8 +194,5 @@ void TcpClient::onSendData(qint64 len)
 
 void TcpClient::onRecvData()
 {
-    QString msgRecv = Recv();
-    if (msgRecv == nullptr)
-        return;
-    emit dataRecved(msgRecv);
+    emit dataRecved(Recv());
 }

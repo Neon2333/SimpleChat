@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include "../../Tcp/inc/TcpClient.h"
+#include "./TcpClient.h"
 #include <assert.h>
 
 class MainWindow : public QMainWindow
@@ -26,6 +26,6 @@ private slots:
     void onConnected();
     void onDisconnected();
     void onDataSended(qint64 len);
-    void onDataRecved(QByteArray msg);
+    void onDataRecved(QByteArray data);
 
 };

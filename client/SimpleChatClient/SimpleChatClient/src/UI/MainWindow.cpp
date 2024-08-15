@@ -1,4 +1,6 @@
-#include "../inc/MainWindow.h"
+#include "../../inc/MainWindow.h"
+#include "../../inc/XmlHelper.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -63,12 +65,21 @@ void MainWindow::onDisconnected()
 
 void MainWindow::onDataSended(qint64 len)
 {
+    QString userName = ui.lineEdit_userName->text();
+    ui.lineEdit_userName->text().clear();
+    ui.listWidget_msg->addItem(QString("You:    ") + userName);
+
     ui.statusBar->showMessage(QString("send: %1 Bytes").arg(len));
 }
 
-void MainWindow::onDataRecved(QByteArray msg)
+void MainWindow::onDataRecved(QByteArray data)
 {
-    ui.listWidget_msg->addItem(QString::fromUtf8(msg));
+   /* char userName[51];
+    memset(userName, 0, sizeof(userName));
+    GetXmlBuffer(data.data(), "username", userName, 50);
+    ui.listWidget_msg->addItem(QString(userName) + QString(":   ") + QString::fromUtf8(data));*/
+
+    ui.listWidget_msg->addItem(QString::fromUtf8(data));
 }
 
 

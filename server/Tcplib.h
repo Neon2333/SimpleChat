@@ -26,7 +26,7 @@ void DeleteRChar(char *str,const char chr);
 void DeleteLRChar(char *str,const char chr);
 void ToUpper(char *str);
 void ToUpper(std::string& str);
-bool GetXmlBuffer(const char *xmlbuffer,const char *fieldname,char *value,const int ilen);
+bool GetXmlBuffer(const char *xmlbuffer,const char *fieldname,char *value,const int ilen=0);
 bool GetXmlBuffer(const char *xmlbuffer,const char *fieldname,bool *value);
 bool GetXmlBuffer(const char *xmlbuffer,const char *fieldname,int *value);
 bool GetXmlBuffer(const char *xmlbuffer,const char *fieldname,unsigned int *value);

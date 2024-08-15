@@ -93,15 +93,19 @@
     <QtUic Include="MainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="UI\inc\MainWindow.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Tcp\src\TcpClient.cpp" />
-    <ClCompile Include="UI\src\MainWindow.cpp" />
+    <ClCompile Include="src\UI\MainWindow.cpp" />
+    <ClCompile Include="src\Utils\TcpClient.cpp" />
+    <ClCompile Include="src\Utils\XmlHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Tcp\inc\TcpClient.h" />
+    <QtMoc Include="inc\MainWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="inc\TcpClient.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="inc\XmlHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
