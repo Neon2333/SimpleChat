@@ -1,3 +1,9 @@
+/*
+*Author:wk
+*Date:2024/8/22
+*Description: the class for tcp server encapsulation
+*/
+
 #ifndef TCPSERVER_H
 #define TCPSERVER_H
 #include "Tcplib.h"

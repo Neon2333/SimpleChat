@@ -1,3 +1,9 @@
+/*
+*Author:wk
+*Date:2024/8/22
+*Description: the class for tcp read and write
+*/
+
 #include "Tcplib.h"
 
 bool Readn(const int sockfd, char* buffer, const size_t n)
@@ -69,7 +75,7 @@ bool TcpWrite(int sockfd, char* buffer, int* ibuflen)
  {
         if(sockfd==-1 || NULL==buffer)	return false;
         
-		fd_set tmpfd;
+    		fd_set tmpfd;
         
         FD_ZERO(&tmpfd);
         FD_SET(sockfd,&tmpfd);

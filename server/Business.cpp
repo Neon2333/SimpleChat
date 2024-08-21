@@ -1,4 +1,9 @@
-//mpserver.cpp
+/*
+*Author:wk
+*Date:2024/8/22
+*Description: the class for dealing with business
+*/
+
 #include"Business.h"
 
 //heartbeat
@@ -11,7 +16,7 @@ bool biz000(const char* strRecvBuffer,char* strSendBuffer)
 //login
 bool biz001(const char* strRecvBuffer,char* strSendBuffer)
 {
-    //从strRecvBuffer中解析出username字段和password字段的值
+    //resolve username and password from strRecvBuffer
     char username[51],password[51];
     memset(username,0,sizeof(username));
     memset(password,0,sizeof(password));
@@ -19,7 +24,7 @@ bool biz001(const char* strRecvBuffer,char* strSendBuffer)
     GetXmlBuffer(strRecvBuffer,"username",username,50);
     GetXmlBuffer(strRecvBuffer,"password",password,50);
     
-    //将用户名、密码同数据库中值对比
+    //compare username and password in database
     if((strcmp(username, "wk")==0)&&(strcmp(password, "p@ssw0rd")==0))
         sprintf(strSendBuffer,"<retcode>0</retcode><message>login success</message>");  //replace bizcode to retcode
     else

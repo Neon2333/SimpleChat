@@ -1,3 +1,9 @@
+/*
+*Author:
+*Date:
+*Description: class for log
+*/
+
 #include "CLogFile.h"
 
 

@@ -1,3 +1,9 @@
+/*
+*Author:wk
+*Date:2024/8/22
+*Description: the class for dealing with business
+*/
+
 #ifndef BUSINESS_H
 #define BUSINESS_H
 #include "Tcplib.h"

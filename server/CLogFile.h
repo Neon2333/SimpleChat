@@ -1,3 +1,9 @@
+/*
+*Author:
+*Date:
+*Description: the class for log
+*/
+
 #ifndef CLOGFILE_H
 #define CLOGFILE_H
 

@@ -1,4 +1,9 @@
-//TcpServer.cpp
+/*
+*Author:wk
+*Date:2024/8/22
+*Description: the class for tcp server encapsulation
+*/
+
 #include "TcpServer.h"
 
 TcpServer::TcpServer()

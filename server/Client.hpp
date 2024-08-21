@@ -1,3 +1,9 @@
+/*
+*Author:wk
+*Date:2024/8/22
+*Description: the class for describing clients
+*/
+
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 #include <stdlib.h>

@@ -1,3 +1,9 @@
+/*
+*Author:wk
+*Date:2024/8/22
+*Description: the class for forwarding message
+*/
+
 #ifndef FORWARD_HPP
 #define FORWARD_HPP
 #include "Client.hpp"
@@ -5,27 +11,24 @@
 
 
 bool sendMsgToAllClientsBut(Client** clients, int numclients, int excluded, char *s);
-//forward to one
+//forward to all
 bool forw000(char* strSendBuffer, Client** clients, int sizeClients, int clientfd)
 {
     return true;
 }
 
-//forward to anyone but one
+//forward to all but one
 bool forw001(char* strSendBuffer, Client** clients, int sizeClients, int clientfd)
 {
     return sendMsgToAllClientsBut(clients, sizeClients, clientfd, strSendBuffer);
 }
 
-//forward to all 
+//forward to one 
 bool forw002(char* strSendBuffer, Client** clients, int sizeClients, int clientfd)
 {
     return true;
 }
 
-/* Send the specified string to all connected clients but the one
- * having as socket descriptor 'excluded'. If you want to send something
- * to every client just set excluded to an impossible socket: -1. */
 bool sendMsgToAllClientsBut(Client** clients, int sizeclients, int excluded, char *s) 
 {
     bool ret=true;
@@ -34,10 +37,6 @@ bool sendMsgToAllClientsBut(Client** clients, int sizeclients, int excluded, cha
         if (clients[j] == NULL ||
             clients[j]->m_clientfd == excluded) continue;
 
-        /* Important: we don't do ANY BUFFERING. We just use the kernel
-         * socket buffers. If the content does not fit, we don't care.
-         * This is needed in order to keep this program simple. */
-       
         //判断sockfd是否可写
 	    fd_set tmpfd;
 		FD_ZERO(&tmpfd);

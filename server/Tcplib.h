@@ -1,3 +1,9 @@
+/*
+*Author:wk
+*Date:2024/8/22
+*Description: the class for tcp read and write 
+*/
+
 #ifndef TCPLIB_H
 #define TCPLIB_H
 
