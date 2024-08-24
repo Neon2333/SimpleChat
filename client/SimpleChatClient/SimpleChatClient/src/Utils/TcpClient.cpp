@@ -1,4 +1,4 @@
-#include "../../inc/TcpClient.h"
+#include "../inc/TcpClient.h"
 
 void TcpClient::initEvents()
 {
@@ -10,7 +10,7 @@ void TcpClient::initEvents()
 
 bool TcpClient::Writen(const char* buffer, qint64 size)
 {
-    if (m_tcpsocket == nullptr)    return false;
+    if (m_tcpsocket == nullptr || buffer==nullptr)    return false;
 
     int ileft, isend, idx;
     ileft = size;
@@ -31,22 +31,46 @@ bool TcpClient::Writen(const char* buffer, qint64 size)
     return res;
 }
 
+bool TcpClient::Readn(char* buffer, const qint64 size)
+{
+    if (m_tcpsocket == nullptr || buffer == nullptr) return false;
+
+    qint64 nleft, nread, idx;
+    nleft = size;
+    nread = 0;
+    idx = 0;
+    while (nleft > 0)
+    {
+        if ((nread = m_tcpsocket->read(buffer + idx, nleft)) <= 0)
+        {
+            return false;
+        }
+        nleft -= nread;
+        idx += nread;
+    }
+    return true;
+}
+
 TcpClient::TcpClient()
 {
     m_serverIp = new QHostAddress();
     m_tcpsocket = new QTcpSocket(nullptr);
     m_port = -1;
+    m_buffer = new char[BUFFER_SIZE];
+    memset(m_buffer, 0, BUFFER_SIZE);
     initEvents();
 }
 
 TcpClient::TcpClient(QString ip, unsigned int port):m_port(port)
 {
-    initEvents();
     m_serverIp = new QHostAddress();
+    m_buffer = new char[BUFFER_SIZE];
+    memset(m_buffer, 0, BUFFER_SIZE);
     if (m_serverIp->setAddress(ip))
     {
         QMessageBox::information(nullptr,"error","server ip address error..");
     }
+    initEvents();
 }
 
 TcpClient::~TcpClient()
@@ -65,6 +89,16 @@ QString TcpClient::ServerIp()
 unsigned int TcpClient::Port()
 {
     return m_port;
+}
+
+char* TcpClient::Buffer()
+{
+    return m_buffer;
+}
+
+QTcpSocket* TcpClient::TcpSocket()
+{
+    return m_tcpsocket;
 }
 
 bool TcpClient::ConnectToServer()
@@ -102,11 +136,12 @@ bool TcpClient::DisconnectFromServer()
 {
     m_tcpsocket->disconnectFromHost();
     m_tcpsocket->waitForDisconnected(3000);
+    m_tcpsocket->close();
     return m_tcpsocket->state() == QAbstractSocket::UnconnectedState;
 }
 
 
-bool TcpClient::Send(QByteArray buffer, int buflen)
+bool TcpClient::Send(QByteArray& buffer, int buflen)
 {
     int ilen = 0;
     if (buflen == 0)
@@ -119,10 +154,17 @@ bool TcpClient::Send(QByteArray buffer, int buflen)
     buffer.prepend((const char*)lenn, 4);  //把长度ilenn添加在buffer前面
 
     //if (Writen(buffer, static_cast<qint64>(ilen)+4) == false)    return false;
-    int isend = m_tcpsocket->write(buffer);
-    if(4+ilen!=isend)    return false;
-    //return m_tcpsocket->waitForBytesWritten();
-    return m_tcpsocket->flush();
+    int isize = 0;
+    while (m_tcpsocket->bytesToWrite() > 0)
+    {
+        isize += m_tcpsocket->write(buffer);
+        if (4 + ilen == isize)
+        {
+            break;
+        }
+    }
+    return m_tcpsocket->waitForBytesWritten();
+    //return m_tcpsocket->flush();
 }
 
 QByteArray TcpClient::Recv()
@@ -138,20 +180,16 @@ QByteArray TcpClient::Recv()
     int imsgLenn = 0;
     memcpy(&imsgLenn, package.data(), 4);
     int imsgLen = qFromBigEndian(imsgLenn);
-    
-    char* buffer = (char*)malloc(imsgLen);
-    assert(buffer != nullptr);
-    memset(buffer, 0, imsgLen);
-    memcpy(buffer, package.data() + 4, imsgLen);
-    QByteArray data(buffer, imsgLen);
-    free(buffer);
+
+    memset(m_buffer, 0, BUFFER_SIZE);
+    memcpy(m_buffer, package.data() + 4, imsgLen);
+    QByteArray data(m_buffer, imsgLen);
     return data;
 
     //int imsgLenn = 0;    
     //m_tcpsocket->read((char*)&imsgLenn, 4);
     //int imsgLen = qFromBigEndian(imsgLenn); //数据包长度
 
-    //
     //if ((isize = m_tcpsocket->bytesAvailable()) == imsgLen)
     //{
     //    QByteArray datagram;
@@ -165,15 +203,6 @@ QByteArray TcpClient::Recv()
     //{
     //    return nullptr;
     //}
-
-    /*while ((isize = m_tcpsocket->bytesAvailable()) > 0)
-    {
-        QByteArray datagram;
-        datagram.resize(imsgLen);
-        m_tcpsocket->read(datagram.data(), datagram.size());
-        QString msgtmp = datagram.data();
-        return msgtmp;
-    }*/
 }
 
 void TcpClient::onConnected()

@@ -97,14 +97,6 @@ int main(int argc,char** argv)
                 ev.events=EPOLLIN;
                 epoll_ctl(epollfd,EPOLL_CTL_ADD,g_tcpServer.m_clientfd,&ev);
                 Client* client = addClient(g_tcpServer.m_clientfd,g_tcpServer.GetIP());
-                /* Send a welcome message. */
-                /*
-                char welcome_msg[1024]=
-                    "Welcome to Simple Chat! "
-                    "Use /nick <nick> to set your nick.\n";
-                g_tcpServer.Write(welcome_msg);
-                //g_logfile.Write("%ld client(%s) connectd..\n",time(0),g_tcpServer.GetIP());
-                */
                 g_logfile.Write("%ld client(%d) connectd..\n",time(0),g_tcpServer.m_clientfd);
                 continue;
             }

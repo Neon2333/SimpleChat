@@ -1,33 +1,123 @@
+# 改进
+
+* 后续改用json格式。
+
+  client使用qt自带json解析。server使用jsoncpp。
+
+* 协议后续改用http。
+
 # 协议
 
-## bizcode
+## enum msgtype
 
-| bizcode | 描述          |
-| ------- | ------------- |
-| 000     | 心跳heartbeat |
-| 001     | 注册signup    |
-| 002     | 登录signin    |
-| 003     | 一对一chat    |
-|         |               |
+| msgtype     | 描述     |
+| ----------- | -------- |
+| heartbeat=0 | 心跳报文 |
+| request=1   | 请求报文 |
+| response=2  | 响应报文 |
+| ack=3       | ACK报文  |
 
-## forwcode
+## struct identify
 
-| forwcode | 描述                   |
-| -------- | ---------------------- |
-| 000      | no forward             |
-| 001      | forward to all but one |
-| 002      | forward to one         |
-| 003      | forward to select ones |
-|          |                        |
+| identify | 描述                        |
+| -------- | --------------------------- |
+| account  | 账号                        |
+| password | 密码                        |
+| token    | login后服务器返回的身份标识 |
+
+## enum bizcode
+
+| bizcode | 描述           |
+| ------- | -------------- |
+| 1       | 注册请求signup |
+| 2       | 登录请求login  |
+| 3       | 登出请求logout |
+| 4       | 聊天请求chat   |
+
+## struct data
+
+| data     | 描述                                               |
+| -------- | -------------------------------------------------- |
+| datatype | text=0、image_png=10、audio_mp3=20、video_mp4=30、 |
+| datasize | databody的字节数                                   |
+| databody | 数据体                                             |
+
+> 1. 音频文件：MP3、WAV、AAC、FLAC、OGG等。
+> 2. 视频文件：MP4、AVI、MOV、MKV、FLV等。
+> 3. 文档文件：PDF、DOCX、TXT、RTF、ODT等。
+> 4. 电子表格文件：XLSX、CSV、ODS、XLS等。
+> 5. 数据库文件：SQLite、MySQL、PostgreSQL、MongoDB等。
+> 6. 压缩文件：ZIP、RAR、7z、GZIP等。
+> 7. 图像文件：JPEG、PNG、GIF、BMP、SVG等。
+> 8. 3D模型文件：OBJ、FBX、DAE、STL等。
+> 9. CAD文件：DWG、DXF等。
+> 10. 编程语言源代码文件：C++ (.cpp, .h), Java (.java, .class), Python (.py), JavaScript (.js)等。
+> 11. 网页文件：HTML、CSS、JS等。
+> 12. 字体文件：TTF、OTF、WOFF等。
+> 13. 电子书文件：EPUB、MOBI、AZW等。
+> 14. 幻灯片演示文稿：PPTX、KEY、ODP等。
+> 15. 日志文件：LOG、TXT等。
+> 16. 配置文件：INI、JSON、XML等。
+> 17. 邮件附件：PST、MBOX等。
+> 18. 游戏资源文件：Unity的AssetBundles、Unreal Engine的资源包等。
+> 19. CAD设计文件：STEP、IGES等。
+> 20. 科学数据文件：HDF5、MATLAB文件等。
+
+## struct forw
+
+| forw      | 描述       |
+| --------- | ---------- |
+| forwcode  | 转发行为   |
+| rececount | 接收者个数 |
+| receivers | 接收者     |
+
+
+
+## enum forwcode
+
+| forwcode | 描述             |
+| -------- | ---------------- |
+| 0        | no forward       |
+| 1        | forward to all   |
+| 2        | forward to one   |
+| 3        | forward to group |
+|          |                  |
 
 ## retcode
 
-| retcode | 描述 |
-| ------- | ---- |
-| 0       | 成功 |
-| -1      | 失败 |
-|         |      |
-|         |      |
+根据具体业务增加
+
+| X    | 描述    |
+| ---- | ------- |
+| 0    | failed  |
+| 1    | success |
+
+| signup retcode：1X | 描述         |
+| ------------------ | ------------ |
+| 10                 | 注册失败     |
+| 11                 | 注册成功     |
+| 12                 | 用户名已存在 |
+|                    |              |
+
+| login retcode:2X | 描述     |
+| ---------------- | -------- |
+| 20               | 登录失败 |
+| 21               | 登录成功 |
+| 22               | 已登录   |
+|                  |          |
+
+| logout retcode:3X | 描述     |
+| ----------------- | -------- |
+| 30                | 登出失败 |
+| 31                | 登出成功 |
+
+| chat retcode:4X | 描述     |
+| --------------- | -------- |
+| 40              | 转发失败 |
+| 41              | 转发成功 |
+|                 |          |
+
+
 
 # client
 
@@ -50,21 +140,17 @@
 >
 > 在实际开发中，还需要考虑到WebSocket的全双工通信特性，服务器和客户端都可以主动向对方发送消息，实现实时通信和聊天功能 5。同时，为了提高系统的并发处理能力，可能需要使用更高效的通信框架和数据库优化策略 8。
 
-## （1）数据库
+## （1）数据库设计
 
-* 表User
+* User-用户基本信息
 
-  用户基本信息
+  uid（NO.）、account、password（md5)、nickname
 
-  uid（NO.）、username、password（md5)、nickname
+* UserLogin（实时变化的）-已登录用户
 
-* 表UserStatus（实时变化的）
+  token、uid、status（在线状态：在线、勿扰等）、clientfd
 
-  用户状态
-
-  uid、status（在线状态：在线、勿扰等）、clientfd
-
-* 表Friends
+* Friends
 
   > 选择一个用户一张好友表还是所有人的好友关系存在一张表，主要取决于应用的具体需求、预期用户规模、查询效率和数据库维护等方面。以下是两种方案的优缺点：
   >
@@ -167,16 +253,130 @@
   >
   > 请注意，这只是一个基础的设计示例。根据实际应用的需求，可能需要进一步的调整和优化。
 
-## （2）报文格式
+## （2）业务报文格式
 
-```cpp
-<bizcode>000</bizcode><forwcode>000</forwcode>
-<message>
-    hello
-</message>
+### 心跳
+
+* 发送
+
+  ```xml
+  <msgtype>0</msgtype>
+  ```
+
+* 响应
+
+  ```xml
+  <msgtype>0</msgtype>
+  <retcode>1</retcode>  
+  ```
+
+### ack
+
+```xml
+<msgtype>ack</msgtype>
+<bizcode>3</bizcode>
+<receivesize>5</receivesize>
 ```
 
-## （3）设置菜单：
+### 注册
+
+```xml
+<msgtype>request</msgtype>
+<bizcode>1</bizcode>
+<identify>
+	<account>12345</account>
+    <password>111</password>
+    <token></token>
+</identify>
+```
+
+```xml
+<msgtype>response</msgtype>
+<bizcode>1</bizcode>
+<retcode>11</retcode>   
+```
+
+### 登录
+
+```xml
+<msgtype>request</msgtype>
+<bizcode>2</bizcode>
+<identify>
+    <account>123456</account>
+    <password>111</password>
+    <token></token>
+</identify>
+```
+
+```xml
+<msgtype>response</msgtype>
+<bizcode>2</bizcode>
+<retcode>21</retcode>
+```
+
+### 登出
+
+```xml
+<msgtype>request</msgtype>
+<bizcode>3</bizcode>
+<identify>
+    <account>123456</account>
+    <password></password>
+    <token>???</token>
+</identify>
+```
+
+```xml
+<msgtype>response</msgtype>
+<bizcode>3</bizcode>
+<retcode>31</retcode>
+```
+
+### 聊天
+
+* 发送报文
+
+```xml
+<msgtype>request</msgtype>
+<identify>
+	<account>123456</account>
+	<password></password>
+    <token>???</token>
+</identify>
+<bizcode>4</bizcode>
+<forw>
+	<forwcode>2</forwcode>
+	<rececount>3</rececount>
+	<receiver1>account1</receiver1>
+	<receiver2>account2</receiver2>
+	<receiver3>account3</receiver3>
+</forw>
+<data>
+	<datatype>text</datatype>
+    <datasize>5</datasize>
+	<databody>HELLO</databody>
+</data>
+```
+
+* 响应报文
+
+```xml
+<msgtype>response</msgtype>
+<bizcode>4</bizcode>
+<retcode>41</retcode>    
+```
+
+## （3）类设计
+
+### Client
+
+* hostname(serverIP)
+
+* port
+
+  
+
+## （4）设置setting菜单：
 
 * 服务器配置页面：
 
@@ -211,7 +411,13 @@
 * 可保存，密码（存储的是加密后）。
 * 发送username、password。对password md5计算，用username和数据库中查询password，对比。返回：
 
-## （6）主页面
+## （6）消息加密发送
+
+发送端对构建的的xml通过rsa加密
+
+接收端对接收的数据进行解密得到明文
+
+## （7）主页面
 
 登录成功进入主页面。
 
@@ -233,7 +439,10 @@
 ### 聊天框
 
 * enter、点击【发送按钮】发送
+
 * 限定文本内容字符数<=MAXLEN。根据服务器设定。
+
+  限定输入字符数，输入时字符数减少。
 
 * 选择图片，打开文件选择框，过滤图片格式。点击【打开】按钮后，发送图片。
 
@@ -255,7 +464,7 @@ UI美化后面再说
 
 ## （1）初始化
 
-从配置文件server.conf中读取：
+从配置文件./config/server.xml中读取：
 
 * 监听端口号
 * 日志路径

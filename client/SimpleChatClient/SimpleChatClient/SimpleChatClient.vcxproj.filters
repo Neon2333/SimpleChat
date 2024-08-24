@@ -33,6 +33,9 @@
     <Filter Include="src\Utils">
       <UniqueIdentifier>{4e709df6-4484-41e2-b2dd-c9ca80e7d280}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Business">
+      <UniqueIdentifier>{bcb00f65-8fab-4349-939f-8137cab11564}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWindow.qrc">
@@ -55,6 +58,15 @@
     <ClCompile Include="src\Utils\XmlHelper.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utils\Md5.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Business\DataDecoder.cpp">
+      <Filter>src\Business</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Business\DataEncoder.cpp">
+      <Filter>src\Business</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="inc\MainWindow.h">
@@ -66,6 +78,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\XmlHelper.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Md5.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\protocol.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\DataEncoder.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\DataDecoder.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
