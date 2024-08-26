@@ -3,9 +3,9 @@
 
 #include<QByteArray>
 #include<QString>
-#include<Md5.h>
-#include "../inc/protocol.hpp"
 #include<vector>
+#include<../inc/Md5.h>
+#include "../inc/protocol.h"
 
 
 class DataEncoder
@@ -26,17 +26,17 @@ public:
 	/// <param name="datatype">数据类型</param>
 	/// <param name="databody">数据体</param>
 	/// <returns>构建的xml字符串</returns>
-	QByteArray ConstructRequestXml(BizCode bizcode, ForwCode forwcode, const QString& account, const QString& password, DataType datatype, const QByteArray& databody, const std::vector<QString>& receivers=std::vector<QString>());
+	QByteArray ConstructRequestXml(BizCode bizcode, const Identify& identify, const Data& data = Data(), const Forw& forw = Forw(), MsgType msgtype=MsgType::Request);
 
 	/// <summary>
 	/// response
 	/// </summary>
-	QByteArray ConstructResponseXml(BizCode bizcode, const QString& account, RetCode retcode, DataType datatype, const QByteArray& databody);
+	QByteArray ConstructResponseXml(BizCode bizcode, RetCode retcode, const Data data, MsgType msgtype);
 
 	/// <summary>
 	/// ack
 	/// </summary>
-	QByteArray ConstructAckXml(BizCode bizcode, const QString& account, DataType datatype, int receivedDatalen);
+	QByteArray ConstructAckXml(BizCode bizcode, DataType datatype, int receivedDatalen, MsgType msgtype=MsgType::Ack);
 
 	/// <summary>
 	/// heartbeat
@@ -46,7 +46,7 @@ public:
 	/// <summary>
 	/// signup
 	/// </summary>
-	QByteArray ConstructSignUpRequestXml(const QString& account, const QString& password);
+	QByteArray ConstructSignUpRequestXml(Identify& identify);
 
 	/// <summary>
 	/// login
@@ -54,17 +54,18 @@ public:
 	/// <param name="account"></param>
 	/// <param name="password"></param>
 	/// <returns></returns>
-	QByteArray ContructLoginRequestXml(const QString& account, const QString& password);
+	QByteArray ContructLoginRequestXml(Identify& identify);
 
 	/// <summary>
 	/// logout
 	/// </summary>
-	QByteArray ConstructLogoutRequestXml(const QString& account, const QString& password);
+	QByteArray ConstructLogoutRequestXml(Identify& identify);
 
 	/// <summary>
 	/// chat
 	/// </summary>
-	QByteArray ConstructChatRequestXml(const QString& account, const QString& password, ForwCode forwcode, QByteArray databody, const std::vector<QString>& receivers);
+	QByteArray ConstructChatRequestXml(Identify& identify, ForwCode forwcode, const Data& data, const Forw& forw);
+
 };
 
 

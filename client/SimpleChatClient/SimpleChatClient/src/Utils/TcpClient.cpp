@@ -141,7 +141,7 @@ bool TcpClient::DisconnectFromServer()
 }
 
 
-bool TcpClient::Send(QByteArray& buffer, int buflen)
+bool TcpClient::Send(QByteArray& buffer, const int buflen)
 {
     int ilen = 0;
     if (buflen == 0)

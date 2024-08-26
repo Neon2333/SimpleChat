@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<cstring>
+#include<mutex>
 
 #define F(x, y, z) 	(((x) & (y)) | ((~x) & (z)))
 #define G(x, y, z) 	(((x) & (z)) | ((y) & (~z)))
@@ -28,26 +29,23 @@ private:
 	unsigned int B = 0xefcdab89;
 	unsigned int C = 0x98badcfe;
 	unsigned int D = 0x10325476;
-
 	unsigned int a, b, c, d = 0;			//4轮逻辑计算中链接变量的过程量
-
-	char* m_FileBuff;				//存储待加密字符串
+	char* m_FileBuff;						//存储待加密字符串
 	unsigned int m_FileLen_Byte;			//文件填充前的长度（单位 - 字节）
-
-	unsigned int m_FileLen_Bit[2];		//文件填充前的长度（单位 - 位 bit）
-
-	char  m_MD5_ChangeBuff[64];	//临时缓存区 - 用于补位操作
+	unsigned int m_FileLen_Bit[2];			//文件填充前的长度（单位 - 位 bit）
+	char  m_MD5_ChangeBuff[64];				//临时缓存区 - 用于补位操作
 	unsigned int m_MD5_Buff[16];			//临时缓存区 - 用于每次运算装每组512 bit数据
-
-	char  m_MD5_Data[16];			//最终计算结果 - 文件的MD5值
+	char  m_MD5_Data[16];					//最终计算结果 - 文件的MD5值
 
 	static Md5* m_md5;
 	Md5();
+	Md5(Md5& another) = delete;
+	Md5& operator=(Md5& another)=delete;
 	void MD5_Calculate();
 
 public:
 	~Md5();
-	static Md5* md5();
+	static Md5* getInstance();
 	char* encode(char* buffer, int len);
 };
 

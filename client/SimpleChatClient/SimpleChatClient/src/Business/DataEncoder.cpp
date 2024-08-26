@@ -1,5 +1,9 @@
 #include "../inc/DataEncoder.h"
 
+/*
+        暂时先用拼字符串生成xml
+*/
+
 DataEncoder::DataEncoder()
 {
 }
@@ -8,130 +12,131 @@ DataEncoder::~DataEncoder()
 {
 }
 
-QByteArray DataEncoder::ConstructRequestXml(BizCode bizcode, ForwCode forwcode, const QString& account, const QString& password, DataType datatype, const QByteArray& databody, const std::vector<QString>& receivers)
+QByteArray DataEncoder::ConstructRequestXml(BizCode bizcode, const Identify& identify, const Data& data, const Forw& forw, MsgType msgtype)
 {
-    /*
-        暂时先用拼字符串生成xml
-    */
-    assert(databody != nullptr);
+    assert(!identify.account.isEmpty());
 
-    QByteArray pwdtmp = Md5::md5()->encode(password.toUtf8().data(), password.length());
-    
-    QString databodytmp;
-    if (datatype == DataType::image || datatype == DataType::file)
+    QByteArray pwdEncode;
+    if (!identify.password.isEmpty())
     {
-        databodytmp = QString::fromUtf8(databody.toBase64());
-    }
-    else
-    {
-        databodytmp = QString::fromUtf8(databody);
+        pwdEncode = Md5::getInstance()->encode(identify.password.toUtf8().data(), identify.password.length());
     }
 
-    QString xmltmp = QString("<msgtype>request</msgtype>\
+    QString xmltmp = QString(
+        "<msgtype>1</msgtype>\
         <bizcode>%1</bizcode>\
-        <forwcode>%2</forwcode>\
-        <account>%3</account>\
-        <password>%4</password>\
-        <datatype>%5</datatype>\
-        <databody>%6</databody>")
-        .arg(QString::number(static_cast<int>(bizcode)))
-        .arg(QString::number(static_cast<int>(forwcode)))
-        .arg(account)
-        .arg(QString::fromUtf8(pwdtmp))
-        .arg(QString::number(static_cast<int>(datatype)))
-        .arg(databodytmp);
-
-
-    switch (forwcode)
-    {
-    case ForwCode::forwardtoone:
-        assert(receivers.size() != 1);
-        xmltmp += QString("<receiver>%1</receiver>").arg(receivers.at(0));
-        break;
-    case ForwCode::forwardtogroup:
-        assert(receivers.size() > 1);
-        xmltmp += QString("<receivercount></receivercount>").arg(QString::number(receivers.size()));
-        for (int ii = 0; ii < receivers.size(); ++ii)
-        {
-            xmltmp += QString("<receiver%1>%2</receiver%1>").arg(QString::number(ii + 1)).arg(receivers.at(ii));
-        }
-
-    default:
-        break;
-    }
-    
-    
-
-    return xmltmp.toUtf8();
-}
-
-QByteArray DataEncoder::ConstructResponseXml(BizCode bizcode, const QString& account, RetCode retcode, DataType datatype, const QByteArray& databody)
-{
-    if (databody == nullptr)   return nullptr;
-
-    QString databodytmp;
-
-    if (datatype == DataType::image || datatype == DataType::file)
-    {
-        databodytmp = QString::fromUtf8(databody.toBase64());
-    }
-    else
-    {
-        databodytmp = QString::fromUtf8(databody);
-    }
-
-    QString xmltmp = QString("<msgtype>response</msgtype>\
-        <bizcode>%1</bizcode>\
+        <identify>\
         <account>%2</account>\
-        <retcode>%3</retcode>\
-        <datatype>%4</datatype>\
-        <databody>%5</databody>")
+        <password>%3</password>\
+        <token>%4</token>\
+        </identify>")
         .arg(QString::number(static_cast<int>(bizcode)))
-        .arg(account)
-        .arg(QString::number(static_cast<int>(retcode)))
-        .arg(QString::number(static_cast<int>(datatype)))
-        .arg(databodytmp);
+        .arg(identify.account)
+        .arg(QString::fromUtf8(pwdEncode))
+        .arg(identify.token);
+
+
+    if (data.dataSize != 0)
+    {
+        QString databodytmp;
+        if (data.dataType != DataType::Text)
+        {
+            databodytmp = QString::fromUtf8(data.databody.toBase64());
+            
+        }
+        else
+        {
+            databodytmp = QString::fromUtf8(data.databody);
+        }
+        xmltmp += QString("<data><datatpye>%1</datatype><datasize>%2</datasize><databody>%3</databody></data>")
+            .arg(static_cast<int>(data.dataType))
+            .arg(QString::number(data.dataSize))
+            .arg(databodytmp);
+    }
+    
+    if (forw.forwcode != ForwCode::NoForward)
+    {
+        xmltmp += QString("<forw><forwcode>%1</forwcode><rececount>%2</rececount>")
+            .arg(static_cast<int>(forw.forwcode))
+            .arg(forw.receiveCount);
+        for (int ii = 0; ii < forw.receiveCount; ++ii)
+        {
+            xmltmp += QString("<receiver%1>%2</receiver%3>")
+                .arg(QString::number(ii))
+                .arg(forw.receivers.at(ii))
+                .arg(QString::number(ii));
+        }
+        xmltmp += QString("</forw>");
+    }
 
     return xmltmp.toUtf8();
 }
 
-QByteArray DataEncoder::ConstructAckXml(BizCode bizcode, const QString& account, DataType datatype, int receivedDatalen)
+QByteArray DataEncoder::ConstructResponseXml(BizCode bizcode, RetCode retcode, const Data data, MsgType msgtype)
+{
+    QString xmltmp = QString("<msgtype>%1</msgtype><bizcode>%2</bizcode><retcode>%3</retcode>")
+        .arg(static_cast<int>(MsgType::Response))
+        .arg(static_cast<int>(bizcode))
+        .arg(static_cast<int>(retcode));
+
+    if (data.dataSize != 0)
+    {
+        QString databodytmp;
+        if (data.dataType != DataType::Text)
+        {
+            databodytmp = QString::fromUtf8(data.databody.toBase64());
+        }
+        else
+        {
+            databodytmp = QString::fromUtf8(data.databody);
+        }
+        xmltmp += QString("<data><datatpye>%1</datatype><datasize>%2</datasize><databody>%3</databody></data>")
+            .arg(static_cast<int>(data.dataType))
+            .arg(QString::number(data.dataSize))
+            .arg(databodytmp);
+    }
+
+    return xmltmp.toUtf8();
+}
+
+QByteArray DataEncoder::ConstructAckXml(BizCode bizcode, DataType datatype, int receivedDataLen, MsgType msgtype)
 {
     QString xmltmp = QString("<msgtype>ack</msgtype>\
         <bizcode>%1</bizcode>\
-        <account>%2</account>\
-        <datatype>text</datatype>\
-        <databody>%3</databody>")
+        <datatype>%2</datatype>\
+        <receivesize>%3</recevivesize>")
         .arg(QString::number(static_cast<int>(bizcode)))
-        .arg(account)
-        .arg(QString::number(receivedDatalen));
+        .arg(QString::number(static_cast<int>(datatype)))
+        .arg(QString::number(static_cast<int>(receivedDataLen)));
 
     return xmltmp.toUtf8();
 }
 
 QByteArray DataEncoder::ConstructHeartBeatXml()
 {
-    QString xmltmp = "<msgtype>heartbeat</msgtype>";
+    QString xmltmp = "<msgtype>0</msgtype>";
+    return xmltmp.toUtf8();
 }
 
-QByteArray DataEncoder::ConstructSignUpRequestXml(const QString& account, const QString& password)
+QByteArray DataEncoder::ConstructSignUpRequestXml(Identify& identify)
 {
-    return this->ConstructRequestXml(BizCode::signup, ForwCode::noforward, account, password, DataType::text, "");
+    return this->ConstructRequestXml(BizCode::Signup, identify);
 }
 
-QByteArray DataEncoder::ContructLoginRequestXml(const QString& account, const QString& password)
+QByteArray DataEncoder::ContructLoginRequestXml(Identify& identify)
 {
-    return this->ConstructRequestXml(BizCode::login, ForwCode::noforward, account, password, DataType::text, "");
+    return this->ConstructRequestXml(BizCode::Login, identify);
 }
 
-QByteArray DataEncoder::ConstructLogoutRequestXml(const QString& account, const QString& password)
+QByteArray DataEncoder::ConstructLogoutRequestXml(Identify& identify)
 {
-    return this->ConstructRequestXml(BizCode::logout, ForwCode::noforward, account, password, DataType::text, "");
+    return this->ConstructRequestXml(BizCode::Logout, identify);
 }
 
-QByteArray DataEncoder::ConstructChatRequestXml(const QString& account, const QString& password, ForwCode forwcode, QByteArray databody, const std::vector<QString>& receivers)
+QByteArray DataEncoder::ConstructChatRequestXml(Identify& identify, ForwCode forwcode, const Data& data, const Forw& forw)
 {
-    return this->ConstructRequestXml(BizCode::chat, forwcode, account, password, DataType::text, databody, receivers);
+    assert(data.dataSize != 0 && forw.forwcode != ForwCode::NoForward);
+    return this->ConstructRequestXml(BizCode::Chat, identify, data, forw);
 }
 
 

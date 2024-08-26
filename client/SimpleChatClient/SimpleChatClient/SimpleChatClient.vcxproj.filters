@@ -67,6 +67,9 @@
     <ClCompile Include="src\Business\DataEncoder.cpp">
       <Filter>src\Business</Filter>
     </ClCompile>
+    <ClCompile Include="src\Business\protocol.cpp">
+      <Filter>src\Business</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="inc\MainWindow.h">
@@ -83,13 +86,13 @@
     <ClInclude Include="inc\Md5.h">
       <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="inc\protocol.hpp">
-      <Filter>inc</Filter>
-    </ClInclude>
     <ClInclude Include="inc\DataEncoder.h">
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="inc\DataDecoder.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\protocol.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>

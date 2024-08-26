@@ -49,7 +49,8 @@ void MainWindow::on_pushButton_send_clicked()
     if (!this->ui.lineEdit_enterMsg->text().isEmpty() && m_tcpclient->IsConnected())
     {
         QString msgtmp = QString("<bizcode>2</bizcode><forwcode>1</forwcode><message>%1</message>").arg(this->ui.lineEdit_enterMsg->text());
-        bool ret = m_tcpclient->Send(msgtmp.toUtf8(), 0);
+        QByteArray msg = msgtmp.toUtf8();
+        bool ret = m_tcpclient->Send(msg, 0);
     }
 }
 

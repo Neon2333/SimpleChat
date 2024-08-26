@@ -19,11 +19,11 @@
 
 ## struct identify
 
-| identify | 描述                        |
-| -------- | --------------------------- |
-| account  | 账号                        |
-| password | 密码                        |
-| token    | login后服务器返回的身份标识 |
+| identify | 描述                        | 最大长度 |
+| -------- | --------------------------- | -------- |
+| account  | 账号                        | 20       |
+| password | 密码                        | 20       |
+| token    | login后服务器返回的身份标识 | 50       |
 
 ## enum bizcode
 
@@ -36,11 +36,11 @@
 
 ## struct data
 
-| data     | 描述                                               |
-| -------- | -------------------------------------------------- |
-| datatype | text=0、image_png=10、audio_mp3=20、video_mp4=30、 |
-| datasize | databody的字节数                                   |
-| databody | 数据体                                             |
+| data     | 描述                                                        |
+| -------- | ----------------------------------------------------------- |
+| datatype | text=0、token=1、image_png=10、audio_mp3=20、video_mp4=30、 |
+| datasize | databody的字节数                                            |
+| databody | 数据体                                                      |
 
 > 1. 音频文件：MP3、WAV、AAC、FLAC、OGG等。
 > 2. 视频文件：MP4、AVI、MOV、MKV、FLV等。
@@ -83,38 +83,38 @@
 | 3        | forward to group |
 |          |                  |
 
-## retcode
+## struct retcode
 
 根据具体业务增加
 
 | X    | 描述    |
 | ---- | ------- |
-| 0    | failed  |
-| 1    | success |
+| 0    | succeed |
+| 1    | failed  |
 
 | signup retcode：1X | 描述         |
 | ------------------ | ------------ |
-| 10                 | 注册失败     |
-| 11                 | 注册成功     |
+| 10                 | 注册成功     |
+| 11                 | 注册失败     |
 | 12                 | 用户名已存在 |
 |                    |              |
 
 | login retcode:2X | 描述     |
 | ---------------- | -------- |
-| 20               | 登录失败 |
-| 21               | 登录成功 |
+| 20               | 登录成功 |
+| 21               | 登录失败 |
 | 22               | 已登录   |
 |                  |          |
 
 | logout retcode:3X | 描述     |
 | ----------------- | -------- |
-| 30                | 登出失败 |
-| 31                | 登出成功 |
+| 30                | 登出成功 |
+| 31                | 登出失败 |
 
 | chat retcode:4X | 描述     |
 | --------------- | -------- |
-| 40              | 转发失败 |
-| 41              | 转发成功 |
+| 40              | 转发成功 |
+| 41              | 转发失败 |
 |                 |          |
 
 
@@ -267,21 +267,22 @@
 
   ```xml
   <msgtype>0</msgtype>
-  <retcode>1</retcode>  
+  <retcode>0</retcode>  
   ```
 
 ### ack
 
 ```xml
-<msgtype>ack</msgtype>
+<msgtype>3</msgtype>
 <bizcode>3</bizcode>
+<datatype>0</datatype>
 <receivesize>5</receivesize>
 ```
 
 ### 注册
 
 ```xml
-<msgtype>request</msgtype>
+<msgtype>1</msgtype>
 <bizcode>1</bizcode>
 <identify>
 	<account>12345</account>
@@ -291,15 +292,15 @@
 ```
 
 ```xml
-<msgtype>response</msgtype>
+<msgtype>2</msgtype>
 <bizcode>1</bizcode>
-<retcode>11</retcode>   
+<retcode>10</retcode>  
 ```
 
 ### 登录
 
 ```xml
-<msgtype>request</msgtype>
+<msgtype>1</msgtype>
 <bizcode>2</bizcode>
 <identify>
     <account>123456</account>
@@ -309,15 +310,20 @@
 ```
 
 ```xml
-<msgtype>response</msgtype>
+<msgtype>2</msgtype>
 <bizcode>2</bizcode>
-<retcode>21</retcode>
+<retcode>20</retcode>
+<data>
+	<datatype>1</datatype>
+    <datasize>50</datasize>
+	<databody>?????????????????????????????????????????????????????????????????????????????</databody>
+</data>
 ```
 
 ### 登出
 
 ```xml
-<msgtype>request</msgtype>
+<msgtype>1</msgtype>
 <bizcode>3</bizcode>
 <identify>
     <account>123456</account>
@@ -327,9 +333,9 @@
 ```
 
 ```xml
-<msgtype>response</msgtype>
+<msgtype>2</msgtype>
 <bizcode>3</bizcode>
-<retcode>31</retcode>
+<retcode>30</retcode>
 ```
 
 ### 聊天
@@ -337,13 +343,18 @@
 * 发送报文
 
 ```xml
-<msgtype>request</msgtype>
+<msgtype>1</msgtype>
+<bizcode>4</bizcode>
 <identify>
 	<account>123456</account>
 	<password></password>
     <token>???</token>
 </identify>
-<bizcode>4</bizcode>
+<data>
+	<datatype>0</datatype>
+    <datasize>5</datasize>
+	<databody>HELLO</databody>
+</data>
 <forw>
 	<forwcode>2</forwcode>
 	<rececount>3</rececount>
@@ -351,19 +362,14 @@
 	<receiver2>account2</receiver2>
 	<receiver3>account3</receiver3>
 </forw>
-<data>
-	<datatype>text</datatype>
-    <datasize>5</datasize>
-	<databody>HELLO</databody>
-</data>
 ```
 
 * 响应报文
 
 ```xml
-<msgtype>response</msgtype>
+<msgtype>2</msgtype>
 <bizcode>4</bizcode>
-<retcode>41</retcode>    
+<retcode>40</retcode>    
 ```
 
 ## （3）类设计

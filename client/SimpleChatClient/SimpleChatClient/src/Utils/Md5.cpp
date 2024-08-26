@@ -1,17 +1,25 @@
 #include "../inc/Md5.h"
 
-Md5::~Md5()
-{
-	delete m_md5;
-}
+Md5* Md5::m_md5 = nullptr;
 
-Md5* Md5::md5()
+Md5::Md5(){}
+
+
+Md5* Md5::getInstance()
 {
 	if (m_md5 == nullptr)
 	{
-		m_md5 = new Md5();
+		static std::mutex mtx;
+		std::lock_guard<std::mutex> lg(mtx);
+		if(m_md5==nullptr)	m_md5 = new Md5();
 	}
 	return m_md5;
+}
+
+Md5::~Md5()
+{
+	if(m_md5!=nullptr)
+		delete m_md5;
 }
 
 void Md5::MD5_Calculate()

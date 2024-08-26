@@ -101,6 +101,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Business\DataDecoder.cpp" />
     <ClCompile Include="src\Business\DataEncoder.cpp" />
+    <ClCompile Include="src\Business\protocol.cpp" />
     <ClCompile Include="src\UI\MainWindow.cpp" />
     <ClCompile Include="src\Utils\Md5.cpp" />
     <ClCompile Include="src\Utils\TcpClient.cpp" />
@@ -116,7 +117,7 @@
     <ClInclude Include="inc\DataDecoder.h" />
     <ClInclude Include="inc\DataEncoder.h" />
     <ClInclude Include="inc\Md5.h" />
-    <ClInclude Include="inc\protocol.hpp" />
+    <ClInclude Include="inc\protocol.h" />
     <ClInclude Include="inc\XmlHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
