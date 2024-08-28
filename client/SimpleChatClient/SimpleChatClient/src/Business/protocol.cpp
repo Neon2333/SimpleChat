@@ -8,7 +8,7 @@
 Identify::Identify():account(""), password(""), token("")
 {}
 
-Identify::Identify(QString account, QString password, QString token) :account(account), password(password), token(token)
+Identify::Identify(QByteArray account, QByteArray password, QByteArray token) :account(account), password(password), token(token)
 {}
 
 Identify::Identify(Identify&& another) 
@@ -19,6 +19,21 @@ Identify::Identify(Identify&& another)
 }
 
 Identify::~Identify(){}
+
+void Identify::setAccount(QByteArray& account)
+{
+	this->account = std::move(account);
+}
+
+void Identify::setPassword(QByteArray& password)
+{
+	this->password = std::move(password);
+}
+
+void Identify::setToken(QByteArray& token)
+{
+	this->token = std::move(token);
+}
 
 Forw::Forw():forwcode(ForwCode::NoForward),receiveCount(0), receivers(0)
 {}

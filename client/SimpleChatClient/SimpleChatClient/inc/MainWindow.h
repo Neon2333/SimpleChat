@@ -2,8 +2,9 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include "./TcpClient.h"
-#include <assert.h>
+#include "Header.h"
+
+
 
 class MainWindow : public QMainWindow
 {

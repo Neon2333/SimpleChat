@@ -126,7 +126,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Port:</string>
+     <string>Username:</string>
     </property>
    </widget>
   </widget>
@@ -158,7 +158,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="MainWindow.qrc"/>
+  <include location="../res/MainWindow.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -4,8 +4,8 @@
 #include<QByteArray>
 #include<QString>
 #include<vector>
-#include<../inc/Md5.h>
-#include "../inc/protocol.h"
+#include "Header.h"
+
 
 
 class DataEncoder
@@ -31,7 +31,7 @@ public:
 	/// <summary>
 	/// response
 	/// </summary>
-	QByteArray ConstructResponseXml(BizCode bizcode, RetCode retcode, const Data data, MsgType msgtype);
+	QByteArray ConstructResponseXml(BizCode bizcode, RetCode retcode, const Data& data, MsgType msgtype);
 
 	/// <summary>
 	/// ack
@@ -46,7 +46,7 @@ public:
 	/// <summary>
 	/// signup
 	/// </summary>
-	QByteArray ConstructSignUpRequestXml(Identify& identify);
+	QByteArray ConstructSignUpRequestXml(Identify& identify, Data& nickname);
 
 	/// <summary>
 	/// login

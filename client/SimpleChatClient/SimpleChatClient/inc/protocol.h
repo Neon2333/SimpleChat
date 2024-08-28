@@ -75,14 +75,18 @@ enum class RetCodeChat
 class Identify
 {
 public:
-	QString account;
-	QString password;
-	QString token;
+	QByteArray account;
+	QByteArray password;
+	QByteArray token;
 public:
 	Identify();
-	Identify(QString account, QString password, QString token);
+	Identify(QByteArray account, QByteArray password, QByteArray token);
 	Identify(Identify&& another);
 	~Identify();
+
+	void setAccount(QByteArray& account);
+	void setPassword(QByteArray& password);
+	void setToken(QByteArray& token);
 };
 
 class Forw

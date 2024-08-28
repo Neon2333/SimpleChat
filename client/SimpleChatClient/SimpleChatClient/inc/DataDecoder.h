@@ -3,9 +3,7 @@
 
 #include<QByteArray>
 #include<QString>
-#include<../inc/Md5.h>
-#include<../inc/protocol.h>
-#include<../inc/XmlHelper.h>
+#include "Header.h"
 
 class DataDecoder
 {

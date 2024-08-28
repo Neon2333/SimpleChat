@@ -16,10 +16,25 @@ QByteArray DataEncoder::ConstructRequestXml(BizCode bizcode, const Identify& ide
 {
     assert(!identify.account.isEmpty());
 
-    QByteArray pwdEncode;
+    QByteArray* pwdCipher=nullptr;
     if (!identify.password.isEmpty())
     {
-        pwdEncode = Md5::getInstance()->encode(identify.password.toUtf8().data(), identify.password.length());
+        //pwdCipher = Md5::getInstance()->cipher(identify.password.data(), identify.password.length());
+        assert(0 == MD5Test());
+        MD5 digest; //数值MD5
+        int len = identify.password.length();
+
+        char* buffer = new char[len];
+        memset(buffer, 0, len);
+        memcpy(buffer, identify.password.data(), len);
+        MD5Buffer(buffer, len, digest); //计算buffer存储在digest
+        delete[] buffer;
+
+        MD5_STR mdstr;      //MD5字符串
+        MD5String(digest, mdstr);   //将数值MD5转换成字符串MD5
+
+        assert(pwdCipher == nullptr);
+        pwdCipher = new QByteArray(mdstr);
     }
 
     QString xmltmp = QString(
@@ -31,9 +46,11 @@ QByteArray DataEncoder::ConstructRequestXml(BizCode bizcode, const Identify& ide
         <token>%4</token>\
         </identify>")
         .arg(QString::number(static_cast<int>(bizcode)))
-        .arg(identify.account)
-        .arg(QString::fromUtf8(pwdEncode))
-        .arg(identify.token);
+        .arg(QString::fromUtf8(identify.account))
+        .arg(QString::fromUtf8(*pwdCipher))
+        .arg(QString::fromUtf8(identify.token));
+
+    delete pwdCipher;
 
 
     if (data.dataSize != 0)
@@ -72,7 +89,7 @@ QByteArray DataEncoder::ConstructRequestXml(BizCode bizcode, const Identify& ide
     return xmltmp.toUtf8();
 }
 
-QByteArray DataEncoder::ConstructResponseXml(BizCode bizcode, RetCode retcode, const Data data, MsgType msgtype)
+QByteArray DataEncoder::ConstructResponseXml(BizCode bizcode, RetCode retcode, const Data& data, MsgType msgtype)
 {
     QString xmltmp = QString("<msgtype>%1</msgtype><bizcode>%2</bizcode><retcode>%3</retcode>")
         .arg(static_cast<int>(MsgType::Response))
@@ -118,9 +135,9 @@ QByteArray DataEncoder::ConstructHeartBeatXml()
     return xmltmp.toUtf8();
 }
 
-QByteArray DataEncoder::ConstructSignUpRequestXml(Identify& identify)
+QByteArray DataEncoder::ConstructSignUpRequestXml(Identify& identify, Data& nickname)
 {
-    return this->ConstructRequestXml(BizCode::Signup, identify);
+    return this->ConstructRequestXml(BizCode::Signup, identify, nickname);
 }
 
 QByteArray DataEncoder::ContructLoginRequestXml(Identify& identify)

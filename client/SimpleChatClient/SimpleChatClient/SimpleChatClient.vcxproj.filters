@@ -38,12 +38,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="MainWindow.qrc">
+    <QtRcc Include="res\LoginForm.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtUic Include="MainWindow.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
+    <QtRcc Include="res\MainWindow.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -58,7 +58,7 @@
     <ClCompile Include="src\Utils\XmlHelper.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\Md5.cpp">
+    <ClCompile Include="src\Utils\Md5.c">
       <Filter>src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Business\DataDecoder.cpp">
@@ -70,12 +70,24 @@
     <ClCompile Include="src\Business\protocol.cpp">
       <Filter>src\Business</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI\LoginForm.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\SignupForm.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="inc\MainWindow.h">
       <Filter>inc</Filter>
     </QtMoc>
     <QtMoc Include="inc\TcpClient.h">
+      <Filter>inc</Filter>
+    </QtMoc>
+    <QtMoc Include="inc\LoginForm.h">
+      <Filter>inc</Filter>
+    </QtMoc>
+    <QtMoc Include="inc\SignupForm.h">
       <Filter>inc</Filter>
     </QtMoc>
   </ItemGroup>
@@ -95,5 +107,22 @@
     <ClInclude Include="inc\protocol.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Header.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="ui\MainWindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\LoginForm.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\SignupForm.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

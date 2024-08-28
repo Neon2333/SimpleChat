@@ -1,10 +1,10 @@
 #include <QtWidgets/QApplication>
-#include "./inc/MainWindow.h"
+#include <../inc/LoginForm.h>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    LoginForm loginForm;
+    loginForm.show();
     return a.exec();
 }
