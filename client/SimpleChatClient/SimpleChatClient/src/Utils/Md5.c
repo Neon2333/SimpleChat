@@ -24,8 +24,10 @@
   */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <assert.h>
 #include "md5.h"
 
 typedef uint32_t UINT4;
@@ -400,4 +402,18 @@ void MD5String(MD5 digest, MD5_STR mdstr)
     unsigned int i, j = 0;
     for (i = 0; i < MD5_VALUE_LEN; i++)
         j += sprintf_s(mdstr + j, MD5_STRING_LEN - j, "%02X", digest[i]);
+}
+
+void MD5StrEncode(const char* plainText, size_t plainSize, MD5_STR cipher)
+{
+    assert(0 == MD5Test());
+    MD5 digest; //数值MD5
+    char* buffer = (char*)malloc(plainSize);
+    assert(buffer != NULL);
+    memset(buffer, 0, plainSize);
+    memcpy(buffer, plainText, plainSize);
+    MD5Buffer(buffer, plainSize, digest); //buffer->digest
+    if(buffer != NULL) free(buffer);
+
+    MD5String(digest, cipher);   //将数值MD5转换成字符串MD5，digest->mdstr
 }

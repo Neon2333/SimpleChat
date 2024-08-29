@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SIGNUPFORM_H
+#define SIGNUPFORM_H
 
 #include <QWidget>
 #include "ui_SignupForm.h"
@@ -11,7 +12,18 @@ class SignupForm : public QWidget
 public:
 	SignupForm(QWidget *parent = nullptr);
 	~SignupForm();
-
 private:
 	Ui::SignupFormClass ui;
+
+
+public:
+
+private:
+	void initForm();
+	void initEvents();
+
+protected:
+	void virtual closeEvent(QCloseEvent* ev);
 };
+
+#endif // !SIGNUPFORM_H

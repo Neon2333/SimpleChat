@@ -6,83 +6,146 @@ LoginForm::LoginForm(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	initForm();
 	initEvents();
+	initForm();
 }
 
 LoginForm::~LoginForm()
-{}
+{
+	delete this->m_signupForm;
+	delete this->m_serverConfigForm;
+}
+
+LoginForm* LoginForm::self = nullptr;
+
 
 void LoginForm::initForm()
 {
+	//参数设定
 	//ui.pushButton_login->setShortcut(Qt::Key_Enter);
+	this->setWindowTitle("登录");
 	ui.lineEdit_password->setEchoMode(QLineEdit::EchoMode::Password);	
 	ui.label_notify->setVisible(false);
-	this->accountLegal = false;
-
-
+	m_accountLegal = false;
+	m_isRemeber = false;
+	m_isAutoLogin = false;
 
 	//定义正则
 	m_rxUsername.setPattern("^[a-zA-Z0-9_]{6,20}$");
 	m_rxPassword.setPattern("^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{8,16}$");
 
+	//提示icon
 	m_iconLegal.addFile(":/image/ok.png");
 	m_iconIllegal.addFile(":/image/error.png");
-	
+
+
+	//读取是否记忆了账号密码、自动登录
+	std::unordered_map<std::string, std::string> id = ConfigOper::ReadConfig("./config/user.conf");
+	this->m_isRemeber = id["remember"] == "TRUE" ? true : false;
+	this->m_isAutoLogin = id["autologin"] == "TRUE" ? true : false;
+
+	//勾选自动登录时，填充账号密码
+	if (this->m_isRemeber)
+	{
+		emit notifyLegal("");	//被保存的账号密码一定合法
+		ui.checkBox_rememberPwd->setCheckState(Qt::Checked);
+		
+		ui.lineEdit_username->setText(id["account"].c_str());		//是否会触发textChanged？会触发！
+		//ui.lineEdit_password->setText(id["password"].c_str());	//password是密文，过不了合法性检查
+		ui.lineEdit_password->setText("simplechat0");
+	}
+	//自动登录
+	if (this->m_isAutoLogin)
+	{
+		ui.checkBox_autoLogin->setCheckState(Qt::Checked);
+		on_pushButton_login_clicked();
+	}
+
+	//保存窗口对象
+	self = this;
+	//创建登录页面
+	m_signupForm = new SignupForm();
+	//创建服务器配置页面
+	m_serverConfigForm = new ServerConfigForm();
 }
+
 
 
 void LoginForm::initEvents()
 {
-
+	//检验账号合法性
 	connect(ui.lineEdit_username, &QLineEdit::textChanged, this, [=]() {
 		m_identify.account = ui.lineEdit_username->text().toUtf8();
 		bool match = m_rxUsername.exactMatch(m_identify.account);
 
 		if (match)
 		{
-			this->accountLegal = true;
-			ui.label_statusUsername->setPixmap(m_iconLegal.pixmap(20, 20));
-			ui.label_statusUsername->show();
 			emit notifyLegal("");
+			ui.label_statusUsername->setPixmap(m_iconLegal.pixmap(20, 20));
 		}
 		else
 		{
-			this->accountLegal = false;
-			ui.label_statusUsername->setPixmap(m_iconIllegal.pixmap(20, 20));
 			emit notifyLegal("账号由字母、数字和下划线构成，长度为6-20个字符");
+			ui.label_statusUsername->setPixmap(m_iconIllegal.pixmap(20, 20));
 		}
 		});
 
+	//检验密码合法性
 	connect(ui.lineEdit_password, &QLineEdit::textChanged, this, [=]() {
 		m_identify.password = ui.lineEdit_password->text().toUtf8();
 		bool match = m_rxPassword.exactMatch(m_identify.password);
 
 		if (match)
 		{
-			this->accountLegal = true;
-			ui.label_statusPassword->setPixmap(m_iconLegal.pixmap(20, 20));
 			emit notifyLegal("");
+			ui.label_statusPassword->setPixmap(m_iconLegal.pixmap(20, 20));
 		}
 		else
 		{
-			this->accountLegal = false;
-			ui.label_statusPassword->setPixmap(m_iconIllegal.pixmap(20, 20));
 			emit notifyLegal("密码至少要有1个字母或数字，长度为8-16个字符");
+			ui.label_statusPassword->setPixmap(m_iconIllegal.pixmap(20, 20));
 		}
 		});
 
+	//合法性显示
 	connect(this, &LoginForm::notifyLegal, this, &LoginForm::on_notifyLegal);
+
+	//注册页面显示
+	connect(ui.pushButton_signup, &QPushButton::clicked, this, [=]() {
+		this->hide();
+		m_signupForm->show();
+		});
+
+	//服务器配置页面显示
+	connect(ui.pushButton_config, &QPushButton::clicked, this, [=]() {
+		this->hide();
+		m_serverConfigForm->show();
+		});
 }
 
 void LoginForm::on_pushButton_login_clicked()
 {
-	if (accountLegal)
+	if (m_accountLegal)
 	{
 		DataEncoder encoder;
 		emit notifyLegal("");
 		QByteArray loginXml = encoder.ContructLoginRequestXml(m_identify);
-		QMessageBox::information(NULL, "debug", loginXml);
+		qDebug() << loginXml;
+
+		bool loginSucceed = true;
+
+		//记住账号、密码、登陆模式
+		if (m_isRemeber && loginSucceed)
+		{
+			std::unordered_map<std::string, std::string> id;
+			id.insert(std::make_pair("account", m_identify.account));
+			MD5_STR pwdCipher;
+			MD5StrEncode(m_identify.password.data(), m_identify.password.length(), pwdCipher);
+			id.insert(std::make_pair("password", std::string(pwdCipher, 32)));
+			id.insert(std::make_pair("autologin", this->m_isAutoLogin ? "TRUE" : "FALSE"));
+			id.insert(std::make_pair("remember", this->m_isRemeber ? "TRUE" : "FALSE"));
+			ConfigOper::WriteConfig("./config/user.conf", id, ConfigWriteType::Cover);
+		}
 	}
 	else
 	{
@@ -91,20 +154,35 @@ void LoginForm::on_pushButton_login_clicked()
 
 }
 
-void LoginForm::on_lineEdit_username_textChanged(QString str)
-{
-
-
-}
 
 void LoginForm::on_notifyLegal(QString str)
 {
 	if (str.isEmpty())
 	{
+		m_accountLegal = true;
 		ui.label_notify->setVisible(false);
 		return;
 	}
 
+	m_accountLegal = false;
 	ui.label_notify->setVisible(true);
 	ui.label_notify->setText(str);
+}
+
+void LoginForm::on_checkBox_autoLogin_toggled(bool isToggled)
+{
+	this->m_isAutoLogin = isToggled;
+	//记住账号、密码、登陆模式
+	ConfigOper::WriteConfig("./config/user.conf", "autologin", this->m_isAutoLogin ? "TRUE" : "FALSE");
+}
+
+void LoginForm::on_checkBox_rememberPwd_toggled(bool isToggled)
+{
+	//取消记住时清空密码
+	if (!isToggled)
+		ui.lineEdit_password->clear();
+
+	this->m_isRemeber = isToggled;
+	ConfigOper::WriteConfig("./config/user.conf", "remember", this->m_isRemeber ? "TRUE" : "FALSE");
+
 }

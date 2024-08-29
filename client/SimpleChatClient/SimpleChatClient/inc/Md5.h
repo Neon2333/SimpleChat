@@ -69,5 +69,7 @@ void MD5Print(MD5 digest);
 */
 void MD5String(MD5 digest, MD5_STR str);
 
+void MD5StrEncode(const char* plainText, size_t plainSize, MD5_STR cipher);
+
 
 #endif // !MD5_H

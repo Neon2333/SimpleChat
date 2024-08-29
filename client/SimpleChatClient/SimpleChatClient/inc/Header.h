@@ -13,3 +13,6 @@ extern "C" {
 #include "TcpClient.h"
 #include "XmlHelper.h"
 #include <assert.h>
+#include "configOper.h"
+#include "DataEncoder.h"
+#include "DataDecoder.h"

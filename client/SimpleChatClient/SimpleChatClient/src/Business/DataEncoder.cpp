@@ -16,25 +16,11 @@ QByteArray DataEncoder::ConstructRequestXml(BizCode bizcode, const Identify& ide
 {
     assert(!identify.account.isEmpty());
 
-    QByteArray* pwdCipher=nullptr;
+    MD5_STR pwdCipherTmp;
     if (!identify.password.isEmpty())
     {
         //pwdCipher = Md5::getInstance()->cipher(identify.password.data(), identify.password.length());
-        assert(0 == MD5Test());
-        MD5 digest; //数值MD5
-        int len = identify.password.length();
-
-        char* buffer = new char[len];
-        memset(buffer, 0, len);
-        memcpy(buffer, identify.password.data(), len);
-        MD5Buffer(buffer, len, digest); //计算buffer存储在digest
-        delete[] buffer;
-
-        MD5_STR mdstr;      //MD5字符串
-        MD5String(digest, mdstr);   //将数值MD5转换成字符串MD5
-
-        assert(pwdCipher == nullptr);
-        pwdCipher = new QByteArray(mdstr);
+        MD5StrEncode(identify.password.data(), identify.password.length(), pwdCipherTmp);
     }
 
     QString xmltmp = QString(
@@ -47,10 +33,8 @@ QByteArray DataEncoder::ConstructRequestXml(BizCode bizcode, const Identify& ide
         </identify>")
         .arg(QString::number(static_cast<int>(bizcode)))
         .arg(QString::fromUtf8(identify.account))
-        .arg(QString::fromUtf8(*pwdCipher))
+        .arg(QString(pwdCipherTmp))
         .arg(QString::fromUtf8(identify.token));
-
-    delete pwdCipher;
 
 
     if (data.dataSize != 0)

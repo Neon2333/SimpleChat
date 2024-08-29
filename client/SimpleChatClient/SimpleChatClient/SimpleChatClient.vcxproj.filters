@@ -76,6 +76,12 @@
     <ClCompile Include="src\UI\SignupForm.cpp">
       <Filter>src\UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utils\configOper.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\ServerConfigForm.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="inc\MainWindow.h">
@@ -88,6 +94,9 @@
       <Filter>inc</Filter>
     </QtMoc>
     <QtMoc Include="inc\SignupForm.h">
+      <Filter>inc</Filter>
+    </QtMoc>
+    <QtMoc Include="inc\ServerConfigForm.h">
       <Filter>inc</Filter>
     </QtMoc>
   </ItemGroup>
@@ -113,6 +122,9 @@
     <ClInclude Include="inc\Header.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="inc\configOper.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ui\MainWindow.ui">
@@ -122,6 +134,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\SignupForm.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ServerConfigForm.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

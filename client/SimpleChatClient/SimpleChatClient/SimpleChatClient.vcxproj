@@ -104,7 +104,9 @@
     <ClCompile Include="src\Business\protocol.cpp" />
     <ClCompile Include="src\UI\LoginForm.cpp" />
     <ClCompile Include="src\UI\MainWindow.cpp" />
+    <ClCompile Include="src\UI\ServerConfigForm.cpp" />
     <ClCompile Include="src\UI\SignupForm.cpp" />
+    <ClCompile Include="src\Utils\configOper.cpp" />
     <ClCompile Include="src\Utils\Md5.c" />
     <ClCompile Include="src\Utils\TcpClient.cpp" />
     <ClCompile Include="src\Utils\XmlHelper.cpp" />
@@ -116,9 +118,11 @@
     <QtMoc Include="inc\TcpClient.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\configOper.h" />
     <ClInclude Include="inc\DataDecoder.h" />
     <ClInclude Include="inc\DataEncoder.h" />
     <ClInclude Include="inc\Header.h" />
+    <QtMoc Include="inc\ServerConfigForm.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="inc\LoginForm.h" />
     <ClInclude Include="inc\Md5.h" />
@@ -129,6 +133,7 @@
   <ItemGroup>
     <QtUic Include="ui\LoginForm.ui" />
     <QtUic Include="ui\MainWindow.ui" />
+    <QtUic Include="ui\ServerConfigForm.ui" />
     <QtUic Include="ui\SignupForm.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
