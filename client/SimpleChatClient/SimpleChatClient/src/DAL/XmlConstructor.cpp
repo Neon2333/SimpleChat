@@ -1,18 +1,18 @@
-#include "../inc/DataEncoder.h"
+#include "../inc/XmlConstructor.h"
 
 /*
         暂时先用拼字符串生成xml
 */
 
-DataEncoder::DataEncoder()
+XmlConstructor::XmlConstructor()
 {
 }
 
-DataEncoder::~DataEncoder()
+XmlConstructor::~XmlConstructor()
 {
 }
 
-QByteArray DataEncoder::ConstructRequestXml(BizCode bizcode, const Identify& identify, const Data& data, const Forw& forw, MsgType msgtype)
+QByteArray XmlConstructor::ConstructRequestXml(BizCode bizcode, const Identify& identify, const Data& data, const Forw& forw, MsgType msgtype)
 {
     assert(!identify.account.isEmpty());
 
@@ -73,7 +73,7 @@ QByteArray DataEncoder::ConstructRequestXml(BizCode bizcode, const Identify& ide
     return xmltmp.toUtf8();
 }
 
-QByteArray DataEncoder::ConstructResponseXml(BizCode bizcode, RetCode retcode, const Data& data, MsgType msgtype)
+QByteArray XmlConstructor::ConstructResponseXml(BizCode bizcode, RetCode retcode, const Data& data, MsgType msgtype)
 {
     QString xmltmp = QString("<msgtype>%1</msgtype><bizcode>%2</bizcode><retcode>%3</retcode>")
         .arg(static_cast<int>(MsgType::Response))
@@ -100,7 +100,7 @@ QByteArray DataEncoder::ConstructResponseXml(BizCode bizcode, RetCode retcode, c
     return xmltmp.toUtf8();
 }
 
-QByteArray DataEncoder::ConstructAckXml(BizCode bizcode, DataType datatype, int receivedDataLen, MsgType msgtype)
+QByteArray XmlConstructor::ConstructAckXml(BizCode bizcode, DataType datatype, int receivedDataLen, MsgType msgtype)
 {
     QString xmltmp = QString("<msgtype>ack</msgtype>\
         <bizcode>%1</bizcode>\
@@ -113,31 +113,60 @@ QByteArray DataEncoder::ConstructAckXml(BizCode bizcode, DataType datatype, int 
     return xmltmp.toUtf8();
 }
 
-QByteArray DataEncoder::ConstructHeartBeatXml()
+QByteArray XmlConstructor::ConstructHeartBeatXml()
 {
     QString xmltmp = "<msgtype>0</msgtype>";
     return xmltmp.toUtf8();
 }
 
-QByteArray DataEncoder::ConstructSignUpRequestXml(Identify& identify, Data& nickname)
+QByteArray XmlConstructor::ConstructSignUpRequestXml(Identify& identify, Data& nickname)
 {
     return this->ConstructRequestXml(BizCode::Signup, identify, nickname);
 }
 
-QByteArray DataEncoder::ContructLoginRequestXml(Identify& identify)
+QByteArray XmlConstructor::ConstructLoginRequestXml(Identify& identify)
 {
     return this->ConstructRequestXml(BizCode::Login, identify);
 }
 
-QByteArray DataEncoder::ConstructLogoutRequestXml(Identify& identify)
+QByteArray XmlConstructor::ConstructLogoutRequestXml(Identify& identify)
 {
     return this->ConstructRequestXml(BizCode::Logout, identify);
 }
 
-QByteArray DataEncoder::ConstructChatRequestXml(Identify& identify, ForwCode forwcode, const Data& data, const Forw& forw)
+QByteArray XmlConstructor::ConstructChatRequestXml(Identify& identify, const Data& data, const Forw& forw)
 {
     assert(data.dataSize != 0 && forw.forwcode != ForwCode::NoForward);
     return this->ConstructRequestXml(BizCode::Chat, identify, data, forw);
+}
+
+
+
+
+QByteArray XmlConstructor::ConstructSignUpRequestXml(User& user)
+{
+    Identify identify = user.GetIdentify();
+    Data nickname(DataType::Text, user.Nickname().length(), user.Nickname());
+    return ConstructSignUpRequestXml(identify, nickname);
+}
+
+QByteArray XmlConstructor::ConstructLoginRequestXml(User& user)
+{
+    Identify identify = user.GetIdentify();
+    return ConstructLoginRequestXml(identify);
+}
+
+QByteArray XmlConstructor::ConstructLogoutRequestXml(User& user)
+{
+    Identify identify = user.GetIdentify();
+    return ConstructLogoutRequestXml(identify);
+}
+
+QByteArray XmlConstructor::ConstructChatRequestXml(User& user, QByteArray chatMsg, const Forw& forw)
+{
+    Identify identify = user.GetIdentify();
+    Data data(DataType::Text, chatMsg.length(), chatMsg);
+    return ConstructChatRequestXml(identify, data, forw);
 }
 
 

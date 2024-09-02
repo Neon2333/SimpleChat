@@ -12,8 +12,8 @@ LoginForm::LoginForm(QWidget *parent)
 
 LoginForm::~LoginForm()
 {
-	delete this->m_signupForm;
-	delete this->m_serverConfigForm;
+	if(m_signupForm != nullptr)	delete this->m_signupForm;
+	if (m_serverConfigForm != nullptr) delete this->m_serverConfigForm;
 }
 
 LoginForm* LoginForm::self = nullptr;
@@ -26,9 +26,6 @@ void LoginForm::initForm()
 	this->setWindowTitle("登录");
 	ui.lineEdit_password->setEchoMode(QLineEdit::EchoMode::Password);	
 	ui.label_notify->setVisible(false);
-	m_accountLegal = false;
-	m_isRemeber = false;
-	m_isAutoLogin = false;
 
 	//定义正则
 	m_rxUsername.setPattern("^[a-zA-Z0-9_]{6,20}$");
@@ -62,11 +59,11 @@ void LoginForm::initForm()
 	}
 
 	//保存窗口对象
-	self = this;
+	if(self == nullptr)	self = this;
 	//创建登录页面
-	m_signupForm = new SignupForm();
+	if(m_signupForm == nullptr)	m_signupForm = new SignupForm();
 	//创建服务器配置页面
-	m_serverConfigForm = new ServerConfigForm();
+	if(m_serverConfigForm == nullptr)	m_serverConfigForm = new ServerConfigForm();
 }
 
 
@@ -127,9 +124,9 @@ void LoginForm::on_pushButton_login_clicked()
 {
 	if (m_accountLegal)
 	{
-		DataEncoder encoder;
+		XmlConstructor xmlConstructor;
 		emit notifyLegal("");
-		QByteArray loginXml = encoder.ContructLoginRequestXml(m_identify);
+		QByteArray loginXml = xmlConstructor.ConstructLoginRequestXml(m_identify);
 		qDebug() << loginXml;
 
 		bool loginSucceed = true;
@@ -185,4 +182,10 @@ void LoginForm::on_checkBox_rememberPwd_toggled(bool isToggled)
 	this->m_isRemeber = isToggled;
 	ConfigOper::WriteConfig("./config/user.conf", "remember", this->m_isRemeber ? "TRUE" : "FALSE");
 
+}
+
+void LoginForm::closeEvent(QCloseEvent* ev)
+{
+
+	QWidget::closeEvent(ev);
 }

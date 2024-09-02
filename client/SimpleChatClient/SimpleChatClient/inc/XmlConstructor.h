@@ -1,31 +1,42 @@
-#ifndef DATAENCODER_H
-#define DATAENCODER_H
+#ifndef XMLCONSTRUCTOR_H
+#define XMLCONSTRUCTOR_H
 
 #include<QByteArray>
 #include<QString>
 #include<vector>
-#include "Header.h"
+#include "../inc/protocol.h"
+extern "C" {
+#include "Md5.h"
+}
+#include "../inc/User.h"
+#include "../inc/XmlHelper.h"
 
 
 
-class DataEncoder
+
+
+/// <summary>
+/// 灏佽
+/// </summary>
+class XmlConstructor
 {
 private:	
 	
 public:
-	DataEncoder();
-	~DataEncoder();
+	XmlConstructor();
+	~XmlConstructor();
+
+public:
 
 	/// <summary>
 	/// request
 	/// </summary>
-	/// <param name="bizcode">业务码</param>
-	/// <param name="forwcode">转发码</param>
-	/// <param name="account">用户账户</param>
-	/// <param name="password">用户密码</param>
-	/// <param name="datatype">数据类型</param>
-	/// <param name="databody">数据体</param>
-	/// <returns>构建的xml字符串</returns>
+	/// <param name="bizcode"></param>
+	/// <param name="identify"></param>
+	/// <param name="data"></param>
+	/// <param name="forw"></param>
+	/// <param name="msgtype"></param>
+	/// <returns></returns>
 	QByteArray ConstructRequestXml(BizCode bizcode, const Identify& identify, const Data& data = Data(), const Forw& forw = Forw(), MsgType msgtype=MsgType::Request);
 
 	/// <summary>
@@ -54,7 +65,7 @@ public:
 	/// <param name="account"></param>
 	/// <param name="password"></param>
 	/// <returns></returns>
-	QByteArray ContructLoginRequestXml(Identify& identify);
+	QByteArray ConstructLoginRequestXml(Identify& identify);
 
 	/// <summary>
 	/// logout
@@ -64,7 +75,16 @@ public:
 	/// <summary>
 	/// chat
 	/// </summary>
-	QByteArray ConstructChatRequestXml(Identify& identify, ForwCode forwcode, const Data& data, const Forw& forw);
+	QByteArray ConstructChatRequestXml(Identify& identify, const Data& data, const Forw& forw);
+
+
+	QByteArray ConstructSignUpRequestXml(User& user);
+
+	QByteArray ConstructLoginRequestXml(User& user);
+
+	QByteArray ConstructLogoutRequestXml(User& user);
+
+	QByteArray ConstructChatRequestXml(User& user, QByteArray chatMsg, const Forw& forw);
 
 };
 

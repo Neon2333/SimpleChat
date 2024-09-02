@@ -1,3 +1,9 @@
+/*
+Date:
+Author:
+Description:规定通信的xml的格式
+*/
+
 #ifndef PROTOCOL_H
 #define	PROTOCOL_H
 
@@ -81,7 +87,10 @@ public:
 public:
 	Identify();
 	Identify(QByteArray account, QByteArray password, QByteArray token);
-	Identify(Identify&& another);
+	Identify(const Identify& another);
+	Identify& operator=(const Identify& another);
+	Identify(const Identify&& another);
+	Identify& operator=(const Identify&& another);
 	~Identify();
 
 	void setAccount(QByteArray& account);

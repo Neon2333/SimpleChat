@@ -8,14 +8,44 @@
 Identify::Identify():account(""), password(""), token("")
 {}
 
+Identify::Identify(const Identify & another)
+{
+	this->account = another.account;
+	this->password = another.password;
+	this->token = another.token;
+}
+
+Identify& Identify::operator=(const Identify& another)
+{
+	if (this != &another)
+	{
+		this->account = another.account;
+		this->password = another.password;
+		this->token = another.token;
+	}
+	return *this;
+}
+
 Identify::Identify(QByteArray account, QByteArray password, QByteArray token) :account(account), password(password), token(token)
 {}
 
-Identify::Identify(Identify&& another) 
+Identify::Identify(const Identify&& another)
 {
 	this->account = std::move(another.account);
 	this->password = std::move(another.password);
 	this->token = std::move(another.token);
+}
+
+Identify& Identify::operator=(const Identify&& another)
+{
+	if (this != &another)
+	{
+		this->account = std::move(another.account);
+		this->password = std::move(another.password);
+		this->token = std::move(another.token);
+	}
+	
+	return *this;
 }
 
 Identify::~Identify(){}

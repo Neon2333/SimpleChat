@@ -99,9 +99,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\Business\DataDecoder.cpp" />
-    <ClCompile Include="src\Business\DataEncoder.cpp" />
-    <ClCompile Include="src\Business\protocol.cpp" />
+    <ClCompile Include="src\DAL\XmlConstructor.cpp" />
+    <ClCompile Include="src\DAL\XmlParser.cpp" />
+    <ClCompile Include="src\Model\protocol.cpp" />
+    <ClCompile Include="src\Model\User.cpp" />
     <ClCompile Include="src\UI\LoginForm.cpp" />
     <ClCompile Include="src\UI\MainWindow.cpp" />
     <ClCompile Include="src\UI\ServerConfigForm.cpp" />
@@ -119,10 +120,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\configOper.h" />
-    <ClInclude Include="inc\DataDecoder.h" />
-    <ClInclude Include="inc\DataEncoder.h" />
     <ClInclude Include="inc\Header.h" />
     <QtMoc Include="inc\ServerConfigForm.h" />
+    <ClInclude Include="inc\User.h" />
+    <ClInclude Include="inc\XmlConstructor.h" />
+    <ClInclude Include="inc\XmlParser.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="inc\LoginForm.h" />
     <ClInclude Include="inc\Md5.h" />

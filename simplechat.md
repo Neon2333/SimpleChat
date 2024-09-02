@@ -1,10 +1,10 @@
-# 改进
+# 可能改进
 
-* 后续改用json格式。
+* json格式
 
-  client使用qt自带json解析。server使用jsoncpp。
+* 协议http
 
-* 协议后续改用http。
+* orm
 
 # 协议
 
@@ -140,7 +140,49 @@
 >
 > 在实际开发中，还需要考虑到WebSocket的全双工通信特性，服务器和客户端都可以主动向对方发送消息，实现实时通信和聊天功能 5。同时，为了提高系统的并发处理能力，可能需要使用更高效的通信框架和数据库优化策略 8。
 
-## （1）数据库设计
+## 1. 架构设计
+
+---
+
+* Model
+
+  协议
+
+  对应数据中的表的实体类
+
+  > protocol.cpp
+  >
+  > 
+
+* DAL
+
+  对数据库的操作API封装：DBHelper
+
+  封装对model的增删改查API
+
+  ORM
+
+  构建xml
+
+  > 
+
+* Utils
+
+  基础的、底层的、公用的一些类
+
+* UI
+
+  
+
+
+
+
+
+## 2. 数据库设计
+
+---
+
+### （1）表设计
 
 * User-用户基本信息
 
@@ -148,7 +190,7 @@
 
 * UserLogin（实时变化的）-已登录用户
 
-  token、uid、status（在线状态：在线、勿扰等）、clientfd
+  User、status（在线状态：在线、勿扰等）、clientfd、token
 
 * Friends
 
@@ -253,7 +295,19 @@
   >
   > 请注意，这只是一个基础的设计示例。根据实际应用的需求，可能需要进一步的调整和优化。
 
-## （2）业务报文格式
+### （2）DAL
+
+
+
+
+
+
+
+
+
+
+
+## 2. 业务报文格式
 
 ### 心跳
 
@@ -377,10 +431,22 @@
 ### Client
 
 * hostname(serverIP)
-
 * port
 
-  
+### User
+
+* identify
+* nickname
+* createdTime
+
+### UserLogin
+
+* User
+* status（在线状态：在线、勿扰等）
+* clientfd
+* token
+
+
 
 ## （4）设置setting菜单：
 

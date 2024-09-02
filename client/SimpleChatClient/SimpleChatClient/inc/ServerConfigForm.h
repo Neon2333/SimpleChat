@@ -20,7 +20,7 @@ private:
 	void initEvents();
 
 protected:
-	void virtual closeEvent(QCloseEvent* ev);
+	void virtual closeEvent(QCloseEvent* ev) override;
 };
 
 #endif // !SERVERCONFIGFORM_H

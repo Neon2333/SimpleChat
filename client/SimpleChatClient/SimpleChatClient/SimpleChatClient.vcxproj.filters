@@ -36,6 +36,12 @@
     <Filter Include="src\Business">
       <UniqueIdentifier>{bcb00f65-8fab-4349-939f-8137cab11564}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Model">
+      <UniqueIdentifier>{b84ab3f2-95e2-4a64-9427-a464c909ace4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\DAL">
+      <UniqueIdentifier>{a4adc43e-bbac-462c-926c-ed6053e4906b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="res\LoginForm.qrc">
@@ -61,15 +67,6 @@
     <ClCompile Include="src\Utils\Md5.c">
       <Filter>src\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Business\DataDecoder.cpp">
-      <Filter>src\Business</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Business\DataEncoder.cpp">
-      <Filter>src\Business</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Business\protocol.cpp">
-      <Filter>src\Business</Filter>
-    </ClCompile>
     <ClCompile Include="src\UI\LoginForm.cpp">
       <Filter>src\UI</Filter>
     </ClCompile>
@@ -81,6 +78,18 @@
     </ClCompile>
     <ClCompile Include="src\UI\ServerConfigForm.cpp">
       <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model\protocol.cpp">
+      <Filter>src\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DAL\XmlConstructor.cpp">
+      <Filter>src\DAL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DAL\XmlParser.cpp">
+      <Filter>src\DAL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model\User.cpp">
+      <Filter>src\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,12 +116,6 @@
     <ClInclude Include="inc\Md5.h">
       <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="inc\DataEncoder.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\DataDecoder.h">
-      <Filter>inc</Filter>
-    </ClInclude>
     <ClInclude Include="inc\protocol.h">
       <Filter>inc</Filter>
     </ClInclude>
@@ -123,6 +126,15 @@
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="inc\configOper.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\XmlConstructor.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\XmlParser.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\User.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
