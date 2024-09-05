@@ -1,3 +1,7 @@
+/*
+	Description:自定义xml解析类
+*/
+
 #ifndef XMLPARSER_H
 #define XMLPARSER_H
 

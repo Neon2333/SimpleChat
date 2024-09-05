@@ -1,8 +1,5 @@
 #include "../inc/XmlConstructor.h"
 
-/*
-        暂时先用拼字符串生成xml
-*/
 
 XmlConstructor::XmlConstructor()
 {
@@ -20,7 +17,7 @@ QByteArray XmlConstructor::ConstructRequestXml(BizCode bizcode, const Identify& 
     if (!identify.password.isEmpty())
     {
         //pwdCipher = Md5::getInstance()->cipher(identify.password.data(), identify.password.length());
-        MD5StrEncode(identify.password.data(), identify.password.length(), pwdCipherTmp);
+        EncryptHelper::MD5StrEncode(identify.password.data(), identify.password.length(), pwdCipherTmp);
     }
 
     QString xmltmp = QString(
@@ -145,26 +142,26 @@ QByteArray XmlConstructor::ConstructChatRequestXml(Identify& identify, const Dat
 
 QByteArray XmlConstructor::ConstructSignUpRequestXml(User& user)
 {
-    Identify identify = user.GetIdentify();
+    Identify identify(user.Account(), user.Password(), "");
     Data nickname(DataType::Text, user.Nickname().length(), user.Nickname());
     return ConstructSignUpRequestXml(identify, nickname);
 }
 
 QByteArray XmlConstructor::ConstructLoginRequestXml(User& user)
 {
-    Identify identify = user.GetIdentify();
+    Identify identify(user.Account(), user.Password(), "");
     return ConstructLoginRequestXml(identify);
 }
 
 QByteArray XmlConstructor::ConstructLogoutRequestXml(User& user)
 {
-    Identify identify = user.GetIdentify();
+    Identify identify(user.Account(), user.Password(), "");
     return ConstructLogoutRequestXml(identify);
 }
 
 QByteArray XmlConstructor::ConstructChatRequestXml(User& user, QByteArray chatMsg, const Forw& forw)
 {
-    Identify identify = user.GetIdentify();
+    Identify identify(user.Account(), user.Password(), "");
     Data data(DataType::Text, chatMsg.length(), chatMsg);
     return ConstructChatRequestXml(identify, data, forw);
 }

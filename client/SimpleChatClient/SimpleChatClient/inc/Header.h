@@ -8,9 +8,6 @@
 
 
 #pragma execution_character_set("utf-8")
-extern "C" {
-#include "Md5.h"
-}
 
 #include <assert.h>
 #include "TcpClient.h"
@@ -20,5 +17,6 @@ extern "C" {
 #include "XmlConstructor.h"
 #include "XmlParser.h"
 #include "User.h"
+#include "EncryptHelper.h"
 
 #endif // !HEADER_H

@@ -14,22 +14,29 @@ ServerConfigForm::ServerConfigForm(QWidget *parent)
 ServerConfigForm::~ServerConfigForm()
 {}
 
+void ServerConfigForm::Show()
+{
+	this->show();
+	ui.lineEdit_host->setText(Client::m_tcpClient->ServerIp());
+	ui.lineEdit_port->setText(QString::number(Client::m_tcpClient->Port()));
+}
+
 void ServerConfigForm::initForm()
 {
 	this->setWindowTitle("服务器配置");
-
+	
 }
 
 void ServerConfigForm::initEvents()
 {
+	//设定ip-port
 	connect(ui.pushButton_ok, &QPushButton::clicked, this, [=]() {
-		//do set server configuration
-
+		Client::setTcpClient(ui.lineEdit_host->text(), ui.lineEdit_port->text().toInt());
+		emit serverConfigReset();
 		closeEvent(nullptr);
 		});
 
 	connect(ui.pushButton_cancel, &QPushButton::clicked, this, [=]() {
-
 		closeEvent(nullptr);
 		});
 

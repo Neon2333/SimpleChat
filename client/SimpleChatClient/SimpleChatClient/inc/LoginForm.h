@@ -9,8 +9,9 @@
 #include "Header.h"
 #include "../inc/SignupForm.h"
 #include "../inc/ServerConfigForm.h"
+#include "../inc/Client.h"
 
-
+#define TRYCONNECTCOUNT 3
 
 class LoginForm : public QWidget
 {
@@ -24,7 +25,7 @@ private:
 	Ui::LoginFormClass ui;
 
 private:
-	Identify m_identify;		//身份验证
+	Identify m_identify;				//身份验证
 	bool m_accountLegal = false;		//账户密码合法
 	bool m_isRemeber = false;			//是否记忆账户密码
 	bool m_isAutoLogin = false;			//是否自动登录
@@ -36,12 +37,12 @@ private:
 	QIcon m_iconIllegal;
 
 	SignupForm* m_signupForm = nullptr;	//登录页面
-	ServerConfigForm* m_serverConfigForm = nullptr;
+	ServerConfigForm* m_serverConfigForm = nullptr;	//服务器配置页面
 
 public:
+	static LoginForm* self;		//存储自身，其他页面进行访问
 	void initForm();	
 	void initEvents();
-	static LoginForm* self;		//存储自身，其他页面进行访问
 
 signals:
 	void notifyLegal(QString str);

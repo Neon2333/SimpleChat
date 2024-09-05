@@ -8,22 +8,21 @@ class User
 {
 public:
 	User();
-	User(int uid, Identify& identify, QByteArray nickname, QByteArray createdTime);
+	User(int uid, QByteArray account, QByteArray password, QByteArray nickname, QByteArray createdTime);
 	User(const User& another);
 	User& operator=(const User& another);
 	~User();
 
 private:
 	int m_uid;
-	Identify m_identify;
+	QByteArray m_account;
+	QByteArray m_password;
 	QByteArray m_nickname;
 	QByteArray m_createdTime;
 
 public:
 	int Uid();
 	bool SetUid(int uid);
-	Identify GetIdentify();
-	bool SetIdentify(Identify& identify);
 	QByteArray Account();
 	bool SetAccount(QByteArray account);
 	QByteArray Password();

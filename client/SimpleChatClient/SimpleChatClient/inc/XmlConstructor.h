@@ -1,3 +1,10 @@
+/*
+		TODO:暂时先用拼字符串生成xml
+		Description:自定义xml解析类
+*/
+
+
+
 #ifndef XMLCONSTRUCTOR_H
 #define XMLCONSTRUCTOR_H
 
@@ -5,15 +12,9 @@
 #include<QString>
 #include<vector>
 #include "../inc/protocol.h"
-extern "C" {
-#include "Md5.h"
-}
 #include "../inc/User.h"
 #include "../inc/XmlHelper.h"
-
-
-
-
+#include "../inc/EncryptHelper.h"
 
 /// <summary>
 /// 封装

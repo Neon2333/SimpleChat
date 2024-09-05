@@ -3,10 +3,11 @@
 User::User()
 {}
 
-User::User(int uid, Identify& identify, QByteArray nickname, QByteArray createdTime)
+User::User(int uid, QByteArray account, QByteArray password, QByteArray nickname, QByteArray createdTime)
 {
 	m_uid = uid;
-	m_identify = identify;
+	m_account = account;
+	m_password = password;
 	m_nickname = nickname;
 	m_createdTime = createdTime;
 }
@@ -14,7 +15,8 @@ User::User(int uid, Identify& identify, QByteArray nickname, QByteArray createdT
 User::User(const User& another)
 {
 	m_uid = another.m_uid;
-	m_identify = another.m_identify;
+	m_account = another.m_account;
+	m_password = another.m_password;
 	m_nickname = another.m_nickname;
 	m_createdTime = another.m_createdTime;
 }
@@ -24,7 +26,8 @@ User& User::operator=(const User& another)
 	if (this != &another)
 	{
 		m_uid = another.m_uid;
-		m_identify = another.m_identify;
+		m_account = another.m_account;
+		m_password = another.m_password;
 		m_nickname = another.m_nickname;
 		m_createdTime = another.m_createdTime;
 	}
@@ -47,36 +50,25 @@ bool User::SetUid(int uid)
 	return true;
 }
 
-Identify User::GetIdentify()
-{
-	return m_identify;
-}
-
-bool User::SetIdentify(Identify& identify)
-{
-	m_identify = identify;
-	return true;
-}
-
 QByteArray User::Account()
 {
-	return m_identify.account;
+	return m_account;
 }
 
 bool User::SetAccount(QByteArray account)
 {
-	m_identify.account = account;
+	m_account = account;
 	return true;
 }
 
 QByteArray User::Password()
 {
-	return m_identify.password;
+	return m_password;
 }
 
 bool User::SetPassword(QByteArray password)
 {
-	m_identify.password = password;
+	m_password = password;
 	return true;
 }
 

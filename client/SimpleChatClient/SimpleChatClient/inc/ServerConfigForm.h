@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include "ui_ServerConfigForm.h"
+#include "../inc/Client.h"
+
 
 class ServerConfigForm : public QWidget
 {
@@ -11,6 +13,8 @@ class ServerConfigForm : public QWidget
 public:
 	ServerConfigForm(QWidget *parent = nullptr);
 	~ServerConfigForm();
+
+	void Show();
 
 private:
 	Ui::ServerConfigFormClass ui;
@@ -21,6 +25,9 @@ private:
 
 protected:
 	void virtual closeEvent(QCloseEvent* ev) override;
+
+signals:
+	void serverConfigReset();
 };
 
 #endif // !SERVERCONFIGFORM_H

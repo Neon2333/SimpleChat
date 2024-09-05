@@ -1,12 +1,44 @@
-# 可能改进
 
-* json格式
 
-* 协议http
+# TODO
 
-* orm
+* model<-->xml
+
+* model<-->db
+
+* signup
+
+* config
+
+* login
+
+* mainWindow
+
+  > * 好友列表
+  >
+  >   > QListView
+  >
+  > * 在线好友列表
+  >
+  > * 双击在线好友
+
+
+
+# 后续改进
+
+* 当前：采用base64+xml方式发送文件。
+
+  后续：使用协议http【基于libcurl】。
+
+  客户端、服务端的xml只用于传输文本。
+
+  且修改服务器自定义的xml解析为使用【cereal库】，客户端使用qt的xml解析而不用拼字符串方式。
+
+  
 
 # 协议
+
+这些结构体、类，**只是xml层面、数据传输层面的抽象**，主要功能是传输数据。
 
 ## enum msgtype
 
@@ -33,6 +65,8 @@
 | 2       | 登录请求login  |
 | 3       | 登出请求logout |
 | 4       | 聊天请求chat   |
+| 5       | 获取在线好友   |
+|         |                |
 
 ## struct data
 
@@ -140,6 +174,15 @@
 >
 > 在实际开发中，还需要考虑到WebSocket的全双工通信特性，服务器和客户端都可以主动向对方发送消息，实现实时通信和聊天功能 5。同时，为了提高系统的并发处理能力，可能需要使用更高效的通信框架和数据库优化策略 8。
 
+## 0. 方案选择
+
+###  （1）图片发送
+
+* 二进制数据使用base64编码，嵌入xml/json发送
+* 使用http
+
+
+
 ## 1. 架构设计
 
 ---
@@ -164,7 +207,7 @@
 
   构建xml
 
-  > 
+  
 
 * Utils
 
@@ -172,7 +215,7 @@
 
 * UI
 
-  
+  页面
 
 
 
@@ -432,19 +475,22 @@
 
 * hostname(serverIP)
 * port
+* clientfd
 
 ### User
 
-* identify
+* account
+* password
+* token
+* 
 * nickname
 * createdTime
 
 ### UserLogin
 
 * User
-* status（在线状态：在线、勿扰等）
-* clientfd
 * token
+* status（在线状态：在线、勿扰等）
 
 
 

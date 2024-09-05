@@ -2,10 +2,23 @@
 
 void TcpClient::initEvents()
 {
-    connect(m_tcpsocket, &QTcpSocket::connected, this, &TcpClient::onConnected);
-    connect(m_tcpsocket, &QTcpSocket::disconnected, this, &TcpClient::onDisconnected);
-    connect(m_tcpsocket, &QTcpSocket::bytesWritten, this, &TcpClient::onSendData);
-    connect(m_tcpsocket, &QTcpSocket::readyRead, this, &TcpClient::onRecvData);
+    connect(m_tcpsocket, &QTcpSocket::connected, this, [=]() {
+        m_isConnected = true;
+        emit serverConnected();
+        });
+
+    connect(m_tcpsocket, &QTcpSocket::disconnected, this, [=]() {
+        m_isConnected = false;
+        emit serverDisconnected();
+        });
+
+    connect(m_tcpsocket, &QTcpSocket::bytesWritten, this, [=](qint64 len) {
+        emit dataSended(len);
+        });
+
+    connect(m_tcpsocket, &QTcpSocket::readyRead, this, [=]() {
+        emit dataRecved(Recv());
+        });
 }
 
 bool TcpClient::Writen(const char* buffer, qint64 size)
@@ -51,6 +64,19 @@ bool TcpClient::Readn(char* buffer, const qint64 size)
     return true;
 }
 
+int TcpClient::RemainTryCount()
+{
+    return m_remainTryCount;
+}
+
+bool TcpClient::setRemainTryCount(int remainTryCount)
+{
+    if (m_remainTryCount == remainTryCount)  return true;
+    m_remainTryCount = remainTryCount;
+    emit remainTryCountChanged(m_remainTryCount);
+    return true;
+}
+
 TcpClient::TcpClient()
 {
     m_serverIp = new QHostAddress();
@@ -64,9 +90,11 @@ TcpClient::TcpClient()
 TcpClient::TcpClient(QString ip, unsigned int port):m_port(port)
 {
     m_serverIp = new QHostAddress();
+    m_tcpsocket = new QTcpSocket(nullptr);
+
     m_buffer = new char[BUFFER_SIZE];
     memset(m_buffer, 0, BUFFER_SIZE);
-    if (m_serverIp->setAddress(ip))
+    if (!m_serverIp->setAddress(ip))
     {
         QMessageBox::information(nullptr,"error","server ip address error..");
     }
@@ -76,7 +104,7 @@ TcpClient::TcpClient(QString ip, unsigned int port):m_port(port)
 TcpClient::~TcpClient()
 {
     delete m_serverIp;
-    delete m_tcpsocket;
+    m_tcpsocket->deleteLater();
 }
 
 QString TcpClient::ServerIp()
@@ -101,17 +129,29 @@ QTcpSocket* TcpClient::TcpSocket()
     return m_tcpsocket;
 }
 
-bool TcpClient::ConnectToServer()
+void TcpClient::ConnectToServer()
 {
+    if (IsConnected())
+    {
+        DisconnectFromServer();
+    }
+
     if (m_serverIp->isNull())
-        return false;
+        return;
+    if (m_tcpsocket->state() == QAbstractSocket::ConnectedState || m_tcpsocket->state() == QAbstractSocket::ConnectingState)
+        return;
     m_tcpsocket->connectToHost(*m_serverIp, m_port);
-    m_tcpsocket->waitForConnected();
-    int ret = m_tcpsocket->state();
-    return m_tcpsocket->state() == QAbstractSocket::ConnectedState;
+    //QThread* th = new QThread();
+    //m_tcpsocket->moveToThread(th);
+    //th->start();
+    //m_tcpsocket->waitForConnected(5000);    //等待5s
+    //th->exit();
+    //th->wait();
+    //th->deleteLater();
+    bool ret = (m_tcpsocket->state() == QAbstractSocket::ConnectedState);
 }
 
-bool TcpClient::ConnectToServer(QString ip, unsigned int port)
+void TcpClient::ConnectToServer(QString ip, unsigned int port)
 {
     if (IsConnected())
     {
@@ -124,18 +164,52 @@ bool TcpClient::ConnectToServer(QString ip, unsigned int port)
     }
     m_port = port;
     
-    return ConnectToServer();
+    ConnectToServer();
+}
+
+void TcpClient::TryConnectServer(const int tryCount, int* remainTryCount)
+{
+    m_remainTryCount = tryCount;
+    int remianTmp = tryCount;
+    //循环连接服务器
+    while (m_remainTryCount > 0 && !IsConnected())
+    {
+        ConnectToServer();
+        setRemainTryCount(--remianTmp);
+        if (remainTryCount != nullptr)  *remainTryCount = m_remainTryCount;
+    }
+}
+
+bool TcpClient::ResetIP(QString ip)
+{
+    if (IsConnected())  DisconnectFromServer();
+        
+    if (!m_serverIp->setAddress(ip))
+    {
+        QMessageBox::information(nullptr, "info", "server ip or port error..");
+        return false;
+    }
+    return true;
+}
+
+bool TcpClient::ResetPort(unsigned int port)
+{
+    if (IsConnected())  DisconnectFromServer();
+
+    m_port = port;
+    return true;
 }
 
 bool TcpClient::IsConnected()
 {
-    return m_tcpsocket->state() == QAbstractSocket::ConnectedState;
+    //return m_tcpsocket->state() == QAbstractSocket::ConnectedState;
+    return m_isConnected;
 }
 
 bool TcpClient::DisconnectFromServer()
 {
     m_tcpsocket->disconnectFromHost();
-    m_tcpsocket->waitForDisconnected(3000);
+    //m_tcpsocket->waitForDisconnected(3000);
     m_tcpsocket->close();
     return m_tcpsocket->state() == QAbstractSocket::UnconnectedState;
 }
@@ -205,23 +279,3 @@ QByteArray TcpClient::Recv()
     //}
 }
 
-void TcpClient::onConnected()
-{
-    emit serverConnected();
-}
-
-void TcpClient::onDisconnected()
-{
-    m_tcpsocket->deleteLater();
-    emit serverDisconnected();
-}
-
-void TcpClient::onSendData(qint64 len)
-{
-    emit dataSended(len);
-}
-
-void TcpClient::onRecvData()
-{
-    emit dataRecved(Recv());
-}

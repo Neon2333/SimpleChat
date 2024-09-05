@@ -6,6 +6,15 @@ LoginForm::LoginForm(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	//保存窗口对象
+	if (self == nullptr)	self = this;
+	//创建登录页面
+	if (m_signupForm == nullptr)	m_signupForm = new SignupForm();
+	//创建服务器配置页面
+	if (m_serverConfigForm == nullptr)	m_serverConfigForm = new ServerConfigForm();
+
+	Client::setTcpClient();
+
 	initEvents();
 	initForm();
 }
@@ -25,7 +34,7 @@ void LoginForm::initForm()
 	//ui.pushButton_login->setShortcut(Qt::Key_Enter);
 	this->setWindowTitle("登录");
 	ui.lineEdit_password->setEchoMode(QLineEdit::EchoMode::Password);	
-	ui.label_notify->setVisible(false);
+	ui.label_notify->setVisible(true);
 
 	//定义正则
 	m_rxUsername.setPattern("^[a-zA-Z0-9_]{6,20}$");
@@ -58,12 +67,10 @@ void LoginForm::initForm()
 		on_pushButton_login_clicked();
 	}
 
-	//保存窗口对象
-	if(self == nullptr)	self = this;
-	//创建登录页面
-	if(m_signupForm == nullptr)	m_signupForm = new SignupForm();
-	//创建服务器配置页面
-	if(m_serverConfigForm == nullptr)	m_serverConfigForm = new ServerConfigForm();
+
+	//尝试连接服务器
+	Client::m_tcpClient->TryConnectServer(TRYCONNECTCOUNT);	//尝试连接服务器
+
 }
 
 
@@ -116,7 +123,31 @@ void LoginForm::initEvents()
 	//服务器配置页面显示
 	connect(ui.pushButton_config, &QPushButton::clicked, this, [=]() {
 		this->hide();
-		m_serverConfigForm->show();
+		m_serverConfigForm->Show();
+		});
+
+
+	//网络是否连接显示
+	connect(Client::m_tcpClient, &TcpClient::serverConnected, this, [=]() {
+		ui.label_notify->setText("已连接服务器");
+		ui.pushButton_login->setEnabled(true);
+		
+		});
+	connect(Client::m_tcpClient, &TcpClient::serverDisconnected, this, [=]() {
+		ui.label_notify->setText("网络未连接");
+		ui.pushButton_login->setEnabled(false);
+
+		});
+
+
+	//通过配置服务器页面重置服务器后，重连服务器
+	connect(m_serverConfigForm, &ServerConfigForm::serverConfigReset, this, [=]() {
+		Client::m_tcpClient->TryConnectServer(TRYCONNECTCOUNT);	//尝试连接服务器
+		});
+	//重连次数显示
+	connect(Client::m_tcpClient, &TcpClient::remainTryCountChanged, this, [=](int remainTryCount) {
+		//ui.label_notify->setText(QString("网络未连接,正在重连..（剩余次数：%1）").arg(QString::number(remainTryCount)));
+		QMessageBox::information(nullptr, "正在重连..", QString("剩余次数：%1").arg(QString::number(remainTryCount)));
 		});
 }
 
@@ -137,7 +168,7 @@ void LoginForm::on_pushButton_login_clicked()
 			std::unordered_map<std::string, std::string> id;
 			id.insert(std::make_pair("account", m_identify.account));
 			MD5_STR pwdCipher;
-			MD5StrEncode(m_identify.password.data(), m_identify.password.length(), pwdCipher);
+			EncryptHelper::MD5StrEncode(m_identify.password.data(), m_identify.password.length(), pwdCipher);
 			id.insert(std::make_pair("password", std::string(pwdCipher, 32)));
 			id.insert(std::make_pair("autologin", this->m_isAutoLogin ? "TRUE" : "FALSE"));
 			id.insert(std::make_pair("remember", this->m_isRemeber ? "TRUE" : "FALSE"));
@@ -157,7 +188,7 @@ void LoginForm::on_notifyLegal(QString str)
 	if (str.isEmpty())
 	{
 		m_accountLegal = true;
-		ui.label_notify->setVisible(false);
+		ui.label_notify->setText("");
 		return;
 	}
 
@@ -172,6 +203,7 @@ void LoginForm::on_checkBox_autoLogin_toggled(bool isToggled)
 	//记住账号、密码、登陆模式
 	ConfigOper::WriteConfig("./config/user.conf", "autologin", this->m_isAutoLogin ? "TRUE" : "FALSE");
 }
+
 
 void LoginForm::on_checkBox_rememberPwd_toggled(bool isToggled)
 {

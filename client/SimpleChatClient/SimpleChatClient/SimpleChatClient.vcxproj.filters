@@ -91,6 +91,12 @@
     <ClCompile Include="src\Model\User.cpp">
       <Filter>src\Model</Filter>
     </ClCompile>
+    <ClCompile Include="src\DAL\Client.cpp">
+      <Filter>src\DAL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\EncryptHelper.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="inc\MainWindow.h">
@@ -135,6 +141,12 @@
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="inc\User.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Client.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\EncryptHelper.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
