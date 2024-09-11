@@ -16,9 +16,6 @@ public:
 private:
 	Ui::SignupFormClass ui;
 
-
-public:
-
 private:
 	void initForm();
 	void initEvents();

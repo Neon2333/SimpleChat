@@ -47,7 +47,7 @@ void LoginForm::initForm()
 
 
 	//读取是否记忆了账号密码、自动登录
-	std::unordered_map<std::string, std::string> id = ConfigOper::ReadConfig("./config/user.conf");
+	std::unordered_map<std::string, std::string> id = ConfigOper::ReadConfig("./config/login.conf");
 	this->m_isRemeber = id["remember"] == "TRUE" ? true : false;
 	this->m_isAutoLogin = id["autologin"] == "TRUE" ? true : false;
 

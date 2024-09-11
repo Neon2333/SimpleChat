@@ -34,13 +34,16 @@ bool Client::initTcpClient()
 	assert(!ip.empty() && !port.empty());
 	m_tcpClient = new TcpClient(QString::fromStdString(ip), static_cast<unsigned int>(std::stoi(port)));
 
-	//连上服务器才保存ip-port
+	//服务器连上事件处理（连上服务器才保存ip-port）
 	QObject::connect(m_tcpClient, &TcpClient::serverConnected, this, [=]() {
 		m_clientConfig.at("host") = Client::m_tcpClient->ServerIp().toStdString();
 		m_clientConfig.at("port") = std::to_string(Client::m_tcpClient->Port());
-
 		ConfigOper::WriteConfig("./config/server.conf", m_clientConfig, ConfigWriteType::Cover);
 		});
+
+	//全局接收数据事件
+	connect(m_tcpClient, &TcpClient::dataRecved, this, &Client::on_DataRecv);
+
 	return false;
 }
 
@@ -58,6 +61,34 @@ bool Client::resetTcpClient(QString ip, unsigned int port)
 	return false;
 
 	return m_tcpClient != nullptr;
+}
+
+QByteArray Client::DataRecv()
+{
+	return m_dataRecv;
+}
+
+void Client::on_DataRecv(QByteArray datagram)
+{
+	m_dataRecv = datagram;
+	//放到线程池处理接收到的数据
+	XmlParser xmlParser;
+	MsgType msgType;
+	xmlParser.ParseMsgTypeXml(datagram, &msgType);
+
+	switch (msgType)
+	{
+	case MsgType::Heartbeat:
+		break;
+	case MsgType::Request:
+		break;
+	case MsgType::Response:
+		break;
+	case MsgType::Ack:
+		break;
+	default:
+		break;
+	}
 }
 
 

@@ -1,5 +1,9 @@
 #include "DoSignUp.h"
 
+DoSignUp::DoSignUp()
+{
+}
+
 DoSignUp::DoSignUp(QObject *parent)
 	: QObject(parent)
 {
@@ -8,7 +12,7 @@ DoSignUp::DoSignUp(QObject *parent)
 DoSignUp::~DoSignUp()
 {}
 
-void DoSignUp::SignUp(QString account, QString password, QString nickname)
+RetCodeSignUp DoSignUp::SignUp(QString account, QString password, QString nickname)
 {
 	Identify identify(account.toUtf8(), password.toUtf8(), "");
 	Data data(DataType::Text, nickname.length(), nickname.toUtf8());
@@ -20,18 +24,6 @@ void DoSignUp::SignUp(QString account, QString password, QString nickname)
 	QByteArray xmlRecv = Client::getInstance().m_tcpClient->Recv();
 	RetCodeSignUp retcode;
 	m_xmlParser.ParseSignUpRetCodeXml(xmlRecv, &retcode);
-	switch (retcode)
-	{
-	case RetCodeSignUp::Succeed:
-		QMessageBox::information(nullptr, "info", "×¢²á³É¹¦£¡");
-		break;
-	case RetCodeSignUp::Failed:
-		QMessageBox::information(nullptr, "info", "×¢²áÊ§°Ü£¡");
-		break;
-	case RetCodeSignUp::AccountExisted:
-		QMessageBox::information(nullptr, "info", "ÕËºÅÒÑ´æÔÚ..");
-		break;
-	default:
-		break;
-	}
+
+	return retcode;
 }

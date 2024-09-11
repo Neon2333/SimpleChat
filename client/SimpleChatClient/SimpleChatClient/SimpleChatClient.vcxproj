@@ -99,21 +99,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\BIL\BusinessFactory.cpp" />
     <ClCompile Include="src\BIL\DoSignUp.cpp" />
-    <ClCompile Include="src\DAL\XmlConstructor.cpp" />
-    <ClCompile Include="src\DAL\XmlParser.cpp" />
+    <ClCompile Include="src\Client.cpp" />
     <ClCompile Include="src\Model\protocol.cpp" />
     <ClCompile Include="src\Model\User.cpp" />
     <ClCompile Include="src\UI\LoginForm.cpp" />
     <ClCompile Include="src\UI\MainWindow.cpp" />
     <ClCompile Include="src\UI\ServerConfigForm.cpp" />
     <ClCompile Include="src\UI\SignupForm.cpp" />
-    <ClCompile Include="src\Utils\Client.cpp" />
     <ClCompile Include="src\Utils\configOper.cpp" />
     <ClCompile Include="src\Utils\Md5.c" />
     <ClCompile Include="src\Utils\SSLHelper.cpp" />
     <ClCompile Include="src\Utils\TcpClient.cpp" />
+    <ClCompile Include="src\Utils\XmlConstructor.cpp" />
     <ClCompile Include="src\Utils\XmlHelper.cpp" />
+    <ClCompile Include="src\Utils\XmlParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="inc\MainWindow.h" />
@@ -123,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="inc\Client.h" />
+    <QtMoc Include="inc\BusinessFactory.h" />
     <ClInclude Include="inc\configOper.h" />
     <QtMoc Include="inc\DoSignUp.h" />
     <ClInclude Include="inc\Header.h" />

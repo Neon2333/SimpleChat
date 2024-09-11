@@ -82,23 +82,26 @@
     <ClCompile Include="src\Model\protocol.cpp">
       <Filter>src\Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\DAL\XmlConstructor.cpp">
-      <Filter>src\DAL</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DAL\XmlParser.cpp">
-      <Filter>src\DAL</Filter>
-    </ClCompile>
     <ClCompile Include="src\Model\User.cpp">
       <Filter>src\Model</Filter>
     </ClCompile>
     <ClCompile Include="src\BIL\DoSignUp.cpp">
       <Filter>src\BIL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\Client.cpp">
-      <Filter>src\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utils\SSLHelper.cpp">
       <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\XmlConstructor.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\XmlParser.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Client.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BIL\BusinessFactory.cpp">
+      <Filter>src\BIL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +124,9 @@
       <Filter>inc</Filter>
     </QtMoc>
     <QtMoc Include="inc\DoSignUp.h">
+      <Filter>inc</Filter>
+    </QtMoc>
+    <QtMoc Include="inc\BusinessFactory.h">
       <Filter>inc</Filter>
     </QtMoc>
   </ItemGroup>

@@ -21,14 +21,30 @@ void SignupForm::initForm()
 
 void SignupForm::initEvents()
 {
+	//注册按钮事件
 	connect(ui.pushButton_ok, &QPushButton::clicked, this, [=]() {
-		//do sign up
+		DoSignUp doSignUp;
+		RetCodeSignUp retcode = doSignUp.SignUp(ui.lineEdit_username->text(), ui.lineEdit_password->text(), ui.lineEdit_nickname->text());
+		switch (retcode)
+		{
+		case RetCodeSignUp::Succeed:
+			QMessageBox::information(nullptr, "info", "注册成功！");
+			break;
+		case RetCodeSignUp::Failed:
+			QMessageBox::information(nullptr, "info", "注册失败！");
+			break;
+		case RetCodeSignUp::AccountExisted:
+			QMessageBox::information(nullptr, "info", "账号已存在..");
+			break;
+		default:
+			break;
+		}
 
 		closeEvent(nullptr);
 		});
 
+	//取消按钮事件
 	connect(ui.pushButton_cancel, &QPushButton::clicked, this, [=]() {
-			
 		closeEvent(nullptr);
 		});
 

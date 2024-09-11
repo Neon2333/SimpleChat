@@ -166,6 +166,7 @@ void TcpClient::ConnectToServer()
         return;
     if (m_tcpsocket->state() == QAbstractSocket::ConnectedState || m_tcpsocket->state() == QAbstractSocket::ConnectingState)
         return;
+    //异步连接，通过信号获知已连接
     m_tcpsocket->connectToHost(*m_serverIp, m_port);
     //QThread* th = new QThread();
     //m_tcpsocket->moveToThread(th);
@@ -278,7 +279,7 @@ QByteArray TcpClient::Recv()
         return nullptr;
     }
 
-    QByteArray package = m_tcpsocket->readAll();
+   /* QByteArray package = m_tcpsocket->readAll();
 
     int imsgLenn = 0;
     memcpy(&imsgLenn, package.data(), 4);
@@ -287,24 +288,22 @@ QByteArray TcpClient::Recv()
     memset(m_buffer, 0, BUFFER_SIZE);
     memcpy(m_buffer, package.data() + 4, imsgLen);
     QByteArray data(m_buffer, imsgLen);
-    return data;
+    return data;*/
 
-    //int imsgLenn = 0;    
-    //m_tcpsocket->read((char*)&imsgLenn, 4);
-    //int imsgLen = qFromBigEndian(imsgLenn); //数据包长度
+    int imsgLenn = 0;    
+    m_tcpsocket->read((char*)&imsgLenn, 4);
+    int imsgLen = qFromBigEndian(imsgLenn); //数据包长度
 
-    //if ((isize = m_tcpsocket->bytesAvailable()) == imsgLen)
-    //{
-    //    QByteArray datagram;
-    //    datagram.resize(imsgLen);
-    //    m_tcpsocket->read(datagram.data(), datagram.size());
-    //    isize = m_tcpsocket->bytesAvailable();
-    //    QString msgtmp = datagram.data();
-    //    return msgtmp;
-    //}
-    //else
-    //{
-    //    return nullptr;
-    //}
+    if ((isize = m_tcpsocket->bytesAvailable()) >= imsgLen)
+    {
+        QByteArray datagram;
+        datagram.resize(imsgLen);
+        m_tcpsocket->read(datagram.data(), datagram.size());
+        return datagram;
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 

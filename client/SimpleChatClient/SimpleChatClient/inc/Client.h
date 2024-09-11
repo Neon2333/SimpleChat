@@ -1,8 +1,8 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 #include<QObject>
-#include "../inc/TcpClient.h"
-#include "../inc/configOper.h"
+#include "Header.h"
+#include <QThreadPool>
 
 
 /// <summary>
@@ -17,6 +17,7 @@ private:
 	Client& operator=(const Client& another) = delete;
 
 	std::unordered_map<std::string, std::string> m_clientConfig;
+	QByteArray m_dataRecv;
 public:
 	//static TcpClient* m_tcpClient;	
 	TcpClient* m_tcpClient;
@@ -25,6 +26,11 @@ public:
 	~Client();
 	bool initTcpClient();
 	bool resetTcpClient(QString ip, unsigned int port);
+	QByteArray DataRecv();
+
+private slots:
+	void on_DataRecv(QByteArray datagram);
+
 
 };
 
