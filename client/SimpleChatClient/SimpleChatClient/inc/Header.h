@@ -16,7 +16,7 @@
 #include "XmlHelper.h"
 #include "XmlConstructor.h"
 #include "XmlParser.h"
-#include "User.h"
-#include "EncryptHelper.h"
+#include "../inc/SSLHelper.h"
+#include "Client.h"
 
 #endif // !HEADER_H

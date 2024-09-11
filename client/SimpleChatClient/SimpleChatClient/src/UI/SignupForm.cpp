@@ -17,8 +17,6 @@ SignupForm::~SignupForm()
 void SignupForm::initForm()
 {
 	this->setWindowTitle("зЂВс");
-	
-
 }
 
 void SignupForm::initEvents()

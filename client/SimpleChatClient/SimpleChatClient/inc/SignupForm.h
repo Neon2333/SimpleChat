@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "ui_SignupForm.h"
 #include "Header.h"
+#include "DoSignUp.h"
 
 class SignupForm : public QWidget
 {

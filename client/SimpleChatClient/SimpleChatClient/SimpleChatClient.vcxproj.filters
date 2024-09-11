@@ -33,14 +33,14 @@
     <Filter Include="src\Utils">
       <UniqueIdentifier>{4e709df6-4484-41e2-b2dd-c9ca80e7d280}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Business">
-      <UniqueIdentifier>{bcb00f65-8fab-4349-939f-8137cab11564}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Model">
       <UniqueIdentifier>{b84ab3f2-95e2-4a64-9427-a464c909ace4}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\DAL">
       <UniqueIdentifier>{a4adc43e-bbac-462c-926c-ed6053e4906b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\BIL">
+      <UniqueIdentifier>{795520d2-828a-4437-a9a2-d39630bbadce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,10 +91,13 @@
     <ClCompile Include="src\Model\User.cpp">
       <Filter>src\Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\DAL\Client.cpp">
-      <Filter>src\DAL</Filter>
+    <ClCompile Include="src\BIL\DoSignUp.cpp">
+      <Filter>src\BIL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\EncryptHelper.cpp">
+    <ClCompile Include="src\Utils\Client.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\SSLHelper.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
   </ItemGroup>
@@ -112,6 +115,12 @@
       <Filter>inc</Filter>
     </QtMoc>
     <QtMoc Include="inc\ServerConfigForm.h">
+      <Filter>inc</Filter>
+    </QtMoc>
+    <QtMoc Include="inc\Client.h">
+      <Filter>inc</Filter>
+    </QtMoc>
+    <QtMoc Include="inc\DoSignUp.h">
       <Filter>inc</Filter>
     </QtMoc>
   </ItemGroup>
@@ -143,10 +152,7 @@
     <ClInclude Include="inc\User.h">
       <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Client.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\EncryptHelper.h">
+    <ClInclude Include="inc\SSLHelper.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>

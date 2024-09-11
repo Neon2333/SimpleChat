@@ -1,7 +1,9 @@
 #include <QtWidgets/QApplication>
-#include <../inc/LoginForm.h>
 #include <QTextCodec>
 #include <QTranslator>
+#include <../inc/LoginForm.h>
+#include "inc/Client.h"
+#include <QObject>
 
 int main(int argc, char *argv[])
 {
@@ -14,5 +16,10 @@ int main(int argc, char *argv[])
 
     LoginForm loginForm;
     loginForm.show();
+
+    //主界面里，异步通信。login、signup都同步通信。
+    //QObject::connect(Client::m_tcpClient, &TcpClient::dataSended, this, &MainWindow::onDataSended);
+    //QObject::connect(Client::m_tcpClient, &TcpClient::dataRecved, this, &MainWindow::onDataRecved);
+    
     return a.exec();
 }

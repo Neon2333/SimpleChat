@@ -13,7 +13,8 @@ LoginForm::LoginForm(QWidget *parent)
 	//创建服务器配置页面
 	if (m_serverConfigForm == nullptr)	m_serverConfigForm = new ServerConfigForm();
 
-	Client::setTcpClient();
+	//使用配置文件的ip-port
+	Client::getInstance().initTcpClient();
 
 	initEvents();
 	initForm();
@@ -69,7 +70,7 @@ void LoginForm::initForm()
 
 
 	//尝试连接服务器
-	Client::m_tcpClient->TryConnectServer(TRYCONNECTCOUNT);	//尝试连接服务器
+	Client::getInstance().m_tcpClient->TryConnectServer(TRYCONNECTCOUNT);	//尝试连接服务器
 
 }
 
@@ -128,12 +129,12 @@ void LoginForm::initEvents()
 
 
 	//网络是否连接显示
-	connect(Client::m_tcpClient, &TcpClient::serverConnected, this, [=]() {
+	connect(Client::getInstance().m_tcpClient, &TcpClient::serverConnected, this, [=]() {
 		ui.label_notify->setText("已连接服务器");
 		ui.pushButton_login->setEnabled(true);
 		
 		});
-	connect(Client::m_tcpClient, &TcpClient::serverDisconnected, this, [=]() {
+	connect(Client::getInstance().m_tcpClient, &TcpClient::serverDisconnected, this, [=]() {
 		ui.label_notify->setText("网络未连接");
 		ui.pushButton_login->setEnabled(false);
 
@@ -141,13 +142,18 @@ void LoginForm::initEvents()
 
 
 	//通过配置服务器页面重置服务器后，重连服务器
-	connect(m_serverConfigForm, &ServerConfigForm::serverConfigReset, this, [=]() {
-		Client::m_tcpClient->TryConnectServer(TRYCONNECTCOUNT);	//尝试连接服务器
+	connect(Client::getInstance().m_tcpClient, &TcpClient::serverIpChanged, this, [=]() {
+		Client::getInstance().m_tcpClient->TryConnectServer(TRYCONNECTCOUNT);	//尝试重新连接服务器
+		});
+	connect(Client::getInstance().m_tcpClient, &TcpClient::serverPortChanged, this, [=]() {
+		Client::getInstance().m_tcpClient->TryConnectServer(TRYCONNECTCOUNT);	//尝试重新连接服务器
 		});
 	//重连次数显示
-	connect(Client::m_tcpClient, &TcpClient::remainTryCountChanged, this, [=](int remainTryCount) {
+	connect(Client::getInstance().m_tcpClient, &TcpClient::remainTryCountChanged, this, [=](int remainTryCount) {
 		//ui.label_notify->setText(QString("网络未连接,正在重连..（剩余次数：%1）").arg(QString::number(remainTryCount)));
 		QMessageBox::information(nullptr, "正在重连..", QString("剩余次数：%1").arg(QString::number(remainTryCount)));
+		if(remainTryCount == 0)	
+			ui.label_notify->setText("网络未连接");
 		});
 }
 
@@ -168,7 +174,7 @@ void LoginForm::on_pushButton_login_clicked()
 			std::unordered_map<std::string, std::string> id;
 			id.insert(std::make_pair("account", m_identify.account));
 			MD5_STR pwdCipher;
-			EncryptHelper::MD5StrEncode(m_identify.password.data(), m_identify.password.length(), pwdCipher);
+			SSLHelper::MD5StrEncode(m_identify.password.data(), m_identify.password.length(), pwdCipher);
 			id.insert(std::make_pair("password", std::string(pwdCipher, 32)));
 			id.insert(std::make_pair("autologin", this->m_isAutoLogin ? "TRUE" : "FALSE"));
 			id.insert(std::make_pair("remember", this->m_isRemeber ? "TRUE" : "FALSE"));

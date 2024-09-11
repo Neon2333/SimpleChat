@@ -99,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\DAL\Client.cpp" />
+    <ClCompile Include="src\BIL\DoSignUp.cpp" />
     <ClCompile Include="src\DAL\XmlConstructor.cpp" />
     <ClCompile Include="src\DAL\XmlParser.cpp" />
     <ClCompile Include="src\Model\protocol.cpp" />
@@ -108,9 +108,10 @@
     <ClCompile Include="src\UI\MainWindow.cpp" />
     <ClCompile Include="src\UI\ServerConfigForm.cpp" />
     <ClCompile Include="src\UI\SignupForm.cpp" />
+    <ClCompile Include="src\Utils\Client.cpp" />
     <ClCompile Include="src\Utils\configOper.cpp" />
-    <ClCompile Include="src\Utils\EncryptHelper.cpp" />
     <ClCompile Include="src\Utils\Md5.c" />
+    <ClCompile Include="src\Utils\SSLHelper.cpp" />
     <ClCompile Include="src\Utils\TcpClient.cpp" />
     <ClCompile Include="src\Utils\XmlHelper.cpp" />
   </ItemGroup>
@@ -121,11 +122,12 @@
     <QtMoc Include="inc\TcpClient.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\Client.h" />
+    <QtMoc Include="inc\Client.h" />
     <ClInclude Include="inc\configOper.h" />
-    <ClInclude Include="inc\EncryptHelper.h" />
+    <QtMoc Include="inc\DoSignUp.h" />
     <ClInclude Include="inc\Header.h" />
     <QtMoc Include="inc\ServerConfigForm.h" />
+    <ClInclude Include="inc\SSLHelper.h" />
     <ClInclude Include="inc\User.h" />
     <ClInclude Include="inc\XmlConstructor.h" />
     <ClInclude Include="inc\XmlParser.h" />

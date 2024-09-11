@@ -9,7 +9,6 @@
 #include "Header.h"
 #include "../inc/SignupForm.h"
 #include "../inc/ServerConfigForm.h"
-#include "../inc/Client.h"
 
 #define TRYCONNECTCOUNT 3
 

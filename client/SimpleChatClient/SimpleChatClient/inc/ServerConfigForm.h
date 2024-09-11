@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "ui_ServerConfigForm.h"
-#include "../inc/Client.h"
+#include "Header.h"
 
 
 class ServerConfigForm : public QWidget

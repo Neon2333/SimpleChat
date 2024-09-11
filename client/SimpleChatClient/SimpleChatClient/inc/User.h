@@ -8,7 +8,7 @@ class User
 {
 public:
 	User();
-	User(int uid, QByteArray account, QByteArray password, QByteArray nickname, QByteArray createdTime);
+	User(int uid, QByteArray account, QByteArray password, QByteArray nickname, QByteArray token, QByteArray createdTime, QByteArray avatarPath);
 	User(const User& another);
 	User& operator=(const User& another);
 	~User();
@@ -18,7 +18,9 @@ private:
 	QByteArray m_account;
 	QByteArray m_password;
 	QByteArray m_nickname;
+	QByteArray m_token;
 	QByteArray m_createdTime;
+	QByteArray m_avatarPath;
 
 public:
 	int Uid();
@@ -29,8 +31,12 @@ public:
 	bool SetPassword(QByteArray password);
 	QByteArray Nickname();
 	bool SetNickname(QByteArray nickname);
+	QByteArray Token();
+	bool SetToken(QByteArray token);
 	QByteArray CreatedTime();
-	bool setCreatedTime(QByteArray createdTime);
+	bool SetCreatedTime(QByteArray createdTime);
+	QByteArray AvatarPath();
+	bool SetAvatarPath(QByteArray avatarPath);
 };
 
 #endif // !USER_H

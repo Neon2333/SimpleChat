@@ -79,25 +79,23 @@ bool TcpClient::setRemainTryCount(int remainTryCount)
 
 TcpClient::TcpClient()
 {
-    m_serverIp = new QHostAddress();
-    m_tcpsocket = new QTcpSocket(nullptr);
-    m_port = -1;
+    if(m_serverIp == nullptr)   m_serverIp = new QHostAddress();
+    if(m_tcpsocket == nullptr)  m_tcpsocket = new QTcpSocket(nullptr);
+
     m_buffer = new char[BUFFER_SIZE];
     memset(m_buffer, 0, BUFFER_SIZE);
     initEvents();
 }
 
-TcpClient::TcpClient(QString ip, unsigned int port):m_port(port)
+TcpClient::TcpClient(QString ip, unsigned int port)
 {
-    m_serverIp = new QHostAddress();
-    m_tcpsocket = new QTcpSocket(nullptr);
+    if (m_serverIp == nullptr)   m_serverIp = new QHostAddress();
+    if (m_tcpsocket == nullptr)  m_tcpsocket = new QTcpSocket(nullptr);
 
     m_buffer = new char[BUFFER_SIZE];
     memset(m_buffer, 0, BUFFER_SIZE);
-    if (!m_serverIp->setAddress(ip))
-    {
-        QMessageBox::information(nullptr,"error","server ip address error..");
-    }
+    assert(true == setServerIp(ip));
+    assert(true == setPort(port));
     initEvents();
 }
 
@@ -105,6 +103,34 @@ TcpClient::~TcpClient()
 {
     delete m_serverIp;
     m_tcpsocket->deleteLater();
+}
+
+bool TcpClient::setServerIp(QString ip)
+{
+    assert(!ip.isEmpty());
+
+    if (m_serverIp != nullptr && ip == m_serverIp->toString())    return false;
+
+    if (m_serverIp->setAddress(ip))
+    {
+        m_isServerIpChanged = true;
+        if (!m_isServerPortChanged)     //防止ip、port信号
+        {
+            emit serverIpChanged();
+        }
+        return true;
+    }
+    return false;
+}
+
+bool TcpClient::setPort(unsigned int port)
+{
+    if (m_port != 0 && port == m_port)  return false;
+    
+    m_port = port;
+    m_isServerPortChanged = true;
+    if(!m_isServerIpChanged)    emit serverPortChanged();
+    return true;
 }
 
 QString TcpClient::ServerIp()
@@ -149,6 +175,9 @@ void TcpClient::ConnectToServer()
     //th->wait();
     //th->deleteLater();
     bool ret = (m_tcpsocket->state() == QAbstractSocket::ConnectedState);
+    //重置标志
+    m_isServerIpChanged = false;
+    m_isServerPortChanged = false;
 }
 
 void TcpClient::ConnectToServer(QString ip, unsigned int port)
@@ -158,7 +187,7 @@ void TcpClient::ConnectToServer(QString ip, unsigned int port)
         DisconnectFromServer();
     }
     
-    if (!m_serverIp->setAddress(ip))
+    if (!setServerIp(ip))
     {
         QMessageBox::information(nullptr, "info", "server ip or port error..");
     }
@@ -182,22 +211,22 @@ void TcpClient::TryConnectServer(const int tryCount, int* remainTryCount)
 
 bool TcpClient::ResetIP(QString ip)
 {
-    if (IsConnected())  DisconnectFromServer();
-        
-    if (!m_serverIp->setAddress(ip))
-    {
-        QMessageBox::information(nullptr, "info", "server ip or port error..");
+    if (!setServerIp(ip))   return false;
+
+    if (IsConnected())
+        return DisconnectFromServer();
+    else
         return false;
-    }
-    return true;
 }
 
 bool TcpClient::ResetPort(unsigned int port)
 {
-    if (IsConnected())  DisconnectFromServer();
+    if (!setPort(port))  return false;
 
-    m_port = port;
-    return true;
+    if (IsConnected())
+        return DisconnectFromServer();
+    else
+        return false;
 }
 
 bool TcpClient::IsConnected()

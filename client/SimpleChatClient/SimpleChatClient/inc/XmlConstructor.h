@@ -14,7 +14,7 @@
 #include "../inc/protocol.h"
 #include "../inc/User.h"
 #include "../inc/XmlHelper.h"
-#include "../inc/EncryptHelper.h"
+#include "../inc/SSLHelper.h"
 
 /// <summary>
 /// 封装
@@ -28,6 +28,7 @@ public:
 	~XmlConstructor();
 
 public:
+
 
 	/// <summary>
 	/// request
@@ -77,6 +78,7 @@ public:
 	/// chat
 	/// </summary>
 	QByteArray ConstructChatRequestXml(Identify& identify, const Data& data, const Forw& forw);
+
 
 
 	QByteArray ConstructSignUpRequestXml(User& user);

@@ -16,9 +16,9 @@ class TcpClient	: public QObject
 {
 	Q_OBJECT
 private:
-	QHostAddress* m_serverIp;
-	unsigned int m_port;
-	QTcpSocket* m_tcpsocket;
+	QHostAddress* m_serverIp = nullptr;
+	unsigned int m_port = 0;
+	QTcpSocket* m_tcpsocket = nullptr;
 	char* m_buffer;
 	void initEvents();
 	bool Writen(const char* buffer, const qint64 size);	//解决粘包、分包
@@ -27,6 +27,8 @@ private:
 
 	int m_remainTryCount = 0;	//剩余尝试连接服务器次数
 	bool m_isConnected = false;	//是否连接上服务器
+	bool m_isServerIpChanged = false;	//ip配置是否发生了改变
+	bool m_isServerPortChanged = false;	//port配置是否发生了改变
 public:
 	int RemainTryCount();
 	bool setRemainTryCount(int remainTryCount);
@@ -35,6 +37,8 @@ public:
 	TcpClient();
 	TcpClient(QString ip, unsigned int port);
 	~TcpClient();
+	bool setServerIp(QString ip);
+	bool setPort(unsigned int port);
 	QString ServerIp();
 	unsigned int Port();
 	QTcpSocket* TcpSocket();
@@ -52,6 +56,8 @@ public:
 
 
 signals:
+	void serverIpChanged();
+	void serverPortChanged();
 	void serverConnected();
 	void serverDisconnected();
 	void dataSended(qint64 len);

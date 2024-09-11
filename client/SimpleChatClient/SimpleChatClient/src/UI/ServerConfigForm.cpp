@@ -17,8 +17,8 @@ ServerConfigForm::~ServerConfigForm()
 void ServerConfigForm::Show()
 {
 	this->show();
-	ui.lineEdit_host->setText(Client::m_tcpClient->ServerIp());
-	ui.lineEdit_port->setText(QString::number(Client::m_tcpClient->Port()));
+	ui.lineEdit_host->setText(Client::getInstance().m_tcpClient->ServerIp());
+	ui.lineEdit_port->setText(QString::number(Client::getInstance().m_tcpClient->Port()));
 }
 
 void ServerConfigForm::initForm()
@@ -31,8 +31,8 @@ void ServerConfigForm::initEvents()
 {
 	//Éè¶¨ip-port
 	connect(ui.pushButton_ok, &QPushButton::clicked, this, [=]() {
-		Client::setTcpClient(ui.lineEdit_host->text(), ui.lineEdit_port->text().toInt());
-		emit serverConfigReset();
+		Client::getInstance().resetTcpClient(ui.lineEdit_host->text(), ui.lineEdit_port->text().toInt());
+		//emit serverConfigReset();
 		closeEvent(nullptr);
 		});
 

@@ -17,7 +17,7 @@ QByteArray XmlConstructor::ConstructRequestXml(BizCode bizcode, const Identify& 
     if (!identify.password.isEmpty())
     {
         //pwdCipher = Md5::getInstance()->cipher(identify.password.data(), identify.password.length());
-        EncryptHelper::MD5StrEncode(identify.password.data(), identify.password.length(), pwdCipherTmp);
+        SSLHelper::MD5StrEncode(identify.password.data(), identify.password.length(), pwdCipherTmp);
     }
 
     QString xmltmp = QString(
@@ -142,26 +142,26 @@ QByteArray XmlConstructor::ConstructChatRequestXml(Identify& identify, const Dat
 
 QByteArray XmlConstructor::ConstructSignUpRequestXml(User& user)
 {
-    Identify identify(user.Account(), user.Password(), "");
+    Identify identify(user.Account(), user.Password(), user.Token());
     Data nickname(DataType::Text, user.Nickname().length(), user.Nickname());
     return ConstructSignUpRequestXml(identify, nickname);
 }
 
 QByteArray XmlConstructor::ConstructLoginRequestXml(User& user)
 {
-    Identify identify(user.Account(), user.Password(), "");
+    Identify identify(user.Account(), user.Password(), user.Token());
     return ConstructLoginRequestXml(identify);
 }
 
 QByteArray XmlConstructor::ConstructLogoutRequestXml(User& user)
 {
-    Identify identify(user.Account(), user.Password(), "");
+    Identify identify(user.Account(), user.Password(), user.Token());
     return ConstructLogoutRequestXml(identify);
 }
 
 QByteArray XmlConstructor::ConstructChatRequestXml(User& user, QByteArray chatMsg, const Forw& forw)
 {
-    Identify identify(user.Account(), user.Password(), "");
+    Identify identify(user.Account(), user.Password(), user.Token());
     Data data(DataType::Text, chatMsg.length(), chatMsg);
     return ConstructChatRequestXml(identify, data, forw);
 }

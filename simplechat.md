@@ -473,6 +473,10 @@
 
 ### Client
 
+只要服务器需要管理很多Client，需要Client类与DB交互。
+
+客户端中Client就1个自己，作为Utilis全局使用。
+
 * hostname(serverIP)
 * port
 * clientfd
@@ -482,14 +486,13 @@
 * account
 * password
 * token
-* 
 * nickname
 * createdTime
+* avatarPath
 
 ### UserLogin
 
 * User
-* token
 * status（在线状态：在线、勿扰等）
 
 

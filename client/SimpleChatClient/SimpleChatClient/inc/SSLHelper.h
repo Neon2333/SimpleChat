@@ -1,5 +1,6 @@
-#ifndef ENCRYPTHELPER_H
-#define ENCRYPTHELPER_H
+#ifndef SSLHELPER_H
+#define SSLHELPER_H
+
 
 extern "C" {
 #include "Md5.h"
@@ -7,12 +8,11 @@ extern "C" {
 #include<assert.h>
 #include<stdlib.h>
 #include<string.h>
-
-class EncryptHelper
+class SSLHelper
 {
 public:
 	static void MD5StrEncode(const char* plainText, size_t plainSize, MD5_STR cipher);
-
 };
 
-#endif // !ENCRYPTHELPER_H
+
+#endif // !SSLHELPER_H
