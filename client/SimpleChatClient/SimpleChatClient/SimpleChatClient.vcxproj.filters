@@ -85,7 +85,7 @@
     <ClCompile Include="src\Model\User.cpp">
       <Filter>src\Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\BIL\DoSignUp.cpp">
+    <ClCompile Include="src\BIL\SignUp.cpp">
       <Filter>src\BIL</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\SSLHelper.cpp">
@@ -100,7 +100,10 @@
     <ClCompile Include="src\Client.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\BIL\BusinessFactory.cpp">
+    <ClCompile Include="src\BIL\AbstractBusiness.cpp">
+      <Filter>src\BIL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BIL\SendBusinessFactory.cpp">
       <Filter>src\BIL</Filter>
     </ClCompile>
   </ItemGroup>
@@ -123,10 +126,13 @@
     <QtMoc Include="inc\Client.h">
       <Filter>inc</Filter>
     </QtMoc>
-    <QtMoc Include="inc\DoSignUp.h">
+    <QtMoc Include="inc\SignUp.h">
       <Filter>inc</Filter>
     </QtMoc>
-    <QtMoc Include="inc\BusinessFactory.h">
+    <QtMoc Include="inc\AbstractBusiness.h">
+      <Filter>inc</Filter>
+    </QtMoc>
+    <QtMoc Include="inc\SendBusinessFactory.h">
       <Filter>inc</Filter>
     </QtMoc>
   </ItemGroup>

@@ -24,6 +24,7 @@ enum class MsgType
 
 enum class BizCode	
 {
+	None=0,
 	Signup=1,
 	Login,
 	Logout,

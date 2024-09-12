@@ -99,8 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\BIL\BusinessFactory.cpp" />
-    <ClCompile Include="src\BIL\DoSignUp.cpp" />
+    <ClCompile Include="src\BIL\AbstractBusiness.cpp" />
+    <ClCompile Include="src\BIL\SendBusinessFactory.cpp" />
+    <ClCompile Include="src\BIL\SignUp.cpp" />
     <ClCompile Include="src\Client.cpp" />
     <ClCompile Include="src\Model\protocol.cpp" />
     <ClCompile Include="src\Model\User.cpp" />
@@ -124,11 +125,12 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="inc\Client.h" />
-    <QtMoc Include="inc\BusinessFactory.h" />
+    <QtMoc Include="inc\AbstractBusiness.h" />
     <ClInclude Include="inc\configOper.h" />
-    <QtMoc Include="inc\DoSignUp.h" />
+    <QtMoc Include="inc\SignUp.h" />
     <ClInclude Include="inc\Header.h" />
     <QtMoc Include="inc\ServerConfigForm.h" />
+    <QtMoc Include="inc\SendBusinessFactory.h" />
     <ClInclude Include="inc\SSLHelper.h" />
     <ClInclude Include="inc\User.h" />
     <ClInclude Include="inc\XmlConstructor.h" />

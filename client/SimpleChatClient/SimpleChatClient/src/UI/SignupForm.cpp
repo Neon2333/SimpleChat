@@ -23,21 +23,15 @@ void SignupForm::initEvents()
 {
 	//注册按钮事件
 	connect(ui.pushButton_ok, &QPushButton::clicked, this, [=]() {
-		DoSignUp doSignUp;
-		RetCodeSignUp retcode = doSignUp.SignUp(ui.lineEdit_username->text(), ui.lineEdit_password->text(), ui.lineEdit_nickname->text());
-		switch (retcode)
+		std::unique_ptr<AbstractBusiness> business = SendBusinessFactory::CreateBusiness(MsgType::Request, BizCode::Signup);
+		Identify identify(ui.lineEdit_username->text().toUtf8(), ui.lineEdit_password->text().toUtf8(), "");
+		Data nickname(DataType::Text, ui.lineEdit_nickname->text().length(), ui.lineEdit_nickname->text().toUtf8());
+		Forw noforw;
+		bool ret = business->SendBusinessProcess(MsgType::Request, BizCode::Signup, identify, nickname, noforw);
+			
+		if (ret)
 		{
-		case RetCodeSignUp::Succeed:
-			QMessageBox::information(nullptr, "info", "注册成功！");
-			break;
-		case RetCodeSignUp::Failed:
-			QMessageBox::information(nullptr, "info", "注册失败！");
-			break;
-		case RetCodeSignUp::AccountExisted:
-			QMessageBox::information(nullptr, "info", "账号已存在..");
-			break;
-		default:
-			break;
+			//旋转
 		}
 
 		closeEvent(nullptr);

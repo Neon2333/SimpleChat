@@ -76,6 +76,22 @@ void Client::on_DataRecv(QByteArray datagram)
 	MsgType msgType;
 	xmlParser.ParseMsgTypeXml(datagram, &msgType);
 
+
+	switch (ret)
+	{
+	case RetCodeSignUp::Succeed:
+		QMessageBox::information(nullptr, "info", "×¢²á³É¹¦£¡");
+		break;
+	case RetCodeSignUp::Failed:
+		QMessageBox::information(nullptr, "info", "×¢²áÊ§°Ü£¡");
+		break;
+	case RetCodeSignUp::AccountExisted:
+		QMessageBox::information(nullptr, "info", "ÕËºÅÒÑ´æÔÚ..");
+		break;
+	default:
+		break;
+	}
+
 	switch (msgType)
 	{
 	case MsgType::Heartbeat:

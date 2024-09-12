@@ -61,6 +61,7 @@
 
 | bizcode | 描述           |
 | ------- | -------------- |
+| 0       | do nothing     |
 | 1       | 注册请求signup |
 | 2       | 登录请求login  |
 | 3       | 登出请求logout |

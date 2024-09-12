@@ -3,15 +3,16 @@
 #include <QObject>
 #include "Header.h"
 #include "../inc/User.h"
+#include "../inc/AbstractBusiness.h"
 
-class DoSignUp  : public QObject
+class SignUp : public QObject, public AbstractBusiness
 {
 	Q_OBJECT
 
 public:
-	DoSignUp();
-	DoSignUp(QObject *parent);
-	~DoSignUp();
+	SignUp();
+	SignUp(QObject *parent);
+	virtual ~SignUp();
 
 	/// <summary>
 	/// ×¢²áÁ÷³Ìº¯Êý
@@ -21,7 +22,9 @@ public:
 	/// <param name="password"></param>
 	/// <param name="nickname"></param>
 	/// <returns></returns>
-	RetCodeSignUp SignUp(QString account, QString password, QString nickname);
+	virtual bool SendBusinessProcess(MsgType msgtype, BizCode bizcode, Identify& identify, Data& data, Forw& forw) override;
+	virtual void RecvBusinessProcess() override;
+
 private:
 	XmlConstructor m_xmlConstructor;
 	XmlParser m_xmlParser;
