@@ -1,5 +1,5 @@
 #include "SignupForm.h"
-#include "LoginForm.h"
+#include "../inc/LoginForm.h"
 
 
 SignupForm::SignupForm(QWidget *parent)

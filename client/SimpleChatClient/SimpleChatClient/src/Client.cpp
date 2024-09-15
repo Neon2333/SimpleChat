@@ -70,29 +70,29 @@ QByteArray Client::DataRecv()
 
 void Client::on_DataRecv(QByteArray datagram)
 {
-	m_dataRecv = datagram;
-	//放到线程池处理接收到的数据
-	XmlParser xmlParser;
-	MsgType msgType;
-	xmlParser.ParseMsgTypeXml(datagram, &msgType);
+	//m_dataRecv = datagram;
+	////放到线程池处理接收到的数据
+	//XmlParser xmlParser;
+	//MsgType msgType;
+	//xmlParser.ParseMsgTypeXml(datagram, &msgType);
 
 
-	switch (ret)
-	{
-	case RetCodeSignUp::Succeed:
-		QMessageBox::information(nullptr, "info", "注册成功！");
-		break;
-	case RetCodeSignUp::Failed:
-		QMessageBox::information(nullptr, "info", "注册失败！");
-		break;
-	case RetCodeSignUp::AccountExisted:
-		QMessageBox::information(nullptr, "info", "账号已存在..");
-		break;
-	default:
-		break;
-	}
+	//switch (ret)
+	//{
+	//case RetCodeSignUp::Succeed:
+	//	QMessageBox::information(nullptr, "info", "注册成功！");
+	//	break;
+	//case RetCodeSignUp::Failed:
+	//	QMessageBox::information(nullptr, "info", "注册失败！");
+	//	break;
+	//case RetCodeSignUp::AccountExisted:
+	//	QMessageBox::information(nullptr, "info", "账号已存在..");
+	//	break;
+	//default:
+	//	break;
+	//}
 
-	switch (msgType)
+	/*switch (msgType)
 	{
 	case MsgType::Heartbeat:
 		break;
@@ -104,7 +104,7 @@ void Client::on_DataRecv(QByteArray datagram)
 		break;
 	default:
 		break;
-	}
+	}*/
 }
 
 
